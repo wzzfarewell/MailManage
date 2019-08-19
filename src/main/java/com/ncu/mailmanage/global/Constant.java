@@ -9,4 +9,5 @@ package com.ncu.mailmanage.global;
 public class Constant {
 
     public static final String SALT = "farewell";
+    public static final String CURRENT_USER = "current_user";
 }

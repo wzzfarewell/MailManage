@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * LoginController
- *
+ * 登录和注册的控制器
  * @author wzzfarewell
  * @date 2019/8/17
  **/
@@ -44,5 +44,8 @@ public class LoginController {
         }
         return "login";
     }
+
+
+
 
 }

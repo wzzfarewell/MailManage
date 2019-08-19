@@ -1,6 +1,8 @@
 package com.ncu.mailmanage.controller;
 
+import com.ncu.mailmanage.global.Constant;
 import com.ncu.mailmanage.pojo.User;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
@@ -23,19 +25,20 @@ public class IndexController {
         if(user == null){
             return "login";
         }
-        model.addAttribute("user", user);
+        user.setPassword(StringUtils.EMPTY);
+        model.addAttribute(Constant.CURRENT_USER, user);
         return "index";
     }
 
     @GetMapping("/deleteMail")
     @RequiresPermissions("deleteMail")
     public String deleteMail(){
-        return "delete-mail";
+        return "delete-mail-success";
     }
 
     @GetMapping("/sendMail")
     @RequiresPermissions("sendMail")
     public String sendMail(){
-        return "send-mail";
+        return "send-mail-success";
     }
 }
