@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.mailmanage.dao.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.ncu.mailmanage.pojo.Role" >
+    <constructor >
+      <idArg column="role_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="role_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="role_name_zhcn" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    role_id, role_name, role_name_zhcn
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_role
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_role
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ncu.mailmanage.pojo.Role" >
+    insert into t_role (role_id, role_name, role_name_zhcn
+      )
+    values (#{roleId,jdbcType=BIGINT}, #{roleName,jdbcType=VARCHAR}, #{roleNameZhcn,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ncu.mailmanage.pojo.Role" >
+    insert into t_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="roleName != null" >
+        role_name,
+      </if>
+      <if test="roleNameZhcn != null" >
+        role_name_zhcn,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        #{roleId,jdbcType=BIGINT},
+      </if>
+      <if test="roleName != null" >
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleNameZhcn != null" >
+        #{roleNameZhcn,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ncu.mailmanage.pojo.Role" >
+    update t_role
+    <set >
+      <if test="roleName != null" >
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleNameZhcn != null" >
+        role_name_zhcn = #{roleNameZhcn,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ncu.mailmanage.pojo.Role" >
+    update t_role
+    set role_name = #{roleName,jdbcType=VARCHAR},
+      role_name_zhcn = #{roleNameZhcn,jdbcType=VARCHAR}
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </update>
+</mapper>

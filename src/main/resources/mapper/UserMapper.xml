@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.mailmanage.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.ncu.mailmanage.pojo.User" >
+    <id column="user_id" property="userId"/>
+    <result column="name" property="name"/>
+    <result column="password" property="password"/>
+    <result column="gender" property="gender"/>
+    <result column="birthday" property="birthday"/>
+    <result column="mail_address" property="mailAddress"/>
+    <result column="position" property="position"/>
+    <result column="avatar" property="avatar"/>
+    <result column="locked" property="locked"/>
+    <result column="create_time" property="createTime"/>
+    <result column="update_time" property="updateTime"/>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.ncu.mailmanage.pojo.User" >
+    <constructor >
+      <idArg column="user_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="birthday" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="gender" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="mail_address" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="position" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="avatar" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="password" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="locked" jdbcType="BIT" javaType="java.lang.Boolean" />
+      <arg column="introduction" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    user_id, birthday, create_time, gender, mail_address, `name`, `position`, update_time,
+    avatar, password, locked
+  </sql>
+  <sql id="Blob_Column_List" >
+    introduction
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_user
+    where user_id = #{userId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_user
+    where user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ncu.mailmanage.pojo.User" >
+    insert into t_user (user_id, birthday, create_time, 
+      gender, mail_address, name, 
+      position, update_time, avatar, 
+      password, locked, introduction
+      )
+    values (#{userId,jdbcType=BIGINT}, #{birthday,jdbcType=TIMESTAMP}, now(),
+      #{gender,jdbcType=VARCHAR}, #{mailAddress,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{position,jdbcType=VARCHAR}, now(), #{avatar,jdbcType=VARCHAR},
+      #{password,jdbcType=VARCHAR}, #{locked,jdbcType=BIT}, #{introduction,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ncu.mailmanage.pojo.User" >
+    insert into t_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="mailAddress != null" >
+        mail_address,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="position != null" >
+        position,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="avatar != null" >
+        avatar,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="locked != null" >
+        locked,
+      </if>
+      <if test="introduction != null" >
+        introduction,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="mailAddress != null" >
+        #{mailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="avatar != null" >
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="locked != null" >
+        #{locked,jdbcType=BIT},
+      </if>
+      <if test="introduction != null" >
+        #{introduction,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ncu.mailmanage.pojo.User" >
+    update t_user
+    <set >
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="mailAddress != null" >
+        mail_address = #{mailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="avatar != null" >
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="locked != null" >
+        locked = #{locked,jdbcType=BIT},
+      </if>
+      <if test="introduction != null" >
+        introduction = #{introduction,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.ncu.mailmanage.pojo.User" >
+    update t_user
+    set birthday = #{birthday,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      gender = #{gender,jdbcType=VARCHAR},
+      mail_address = #{mailAddress,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      position = #{position,jdbcType=VARCHAR},
+      update_time = now(),
+      avatar = #{avatar,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      locked = #{locked,jdbcType=BIT},
+      introduction = #{introduction,jdbcType=LONGVARCHAR}
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ncu.mailmanage.pojo.User" >
+    update t_user
+    set birthday = #{birthday,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      gender = #{gender,jdbcType=VARCHAR},
+      mail_address = #{mailAddress,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      position = #{position,jdbcType=VARCHAR},
+      update_time = now(),
+      avatar = #{avatar,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      locked = #{locked,jdbcType=BIT}
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+  
+  <select id="findByUsername" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from t_user where t_user.name = #{username}
+  </select>
+</mapper>

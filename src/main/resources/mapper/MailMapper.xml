@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ncu.mailmanage.dao.MailMapper" >
+  <resultMap id="BaseResultMap" type="com.ncu.mailmanage.pojo.Mail" >
+    <constructor >
+      <idArg column="mail_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="title" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="send_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.ncu.mailmanage.pojo.Mail" >
+    <constructor >
+      <idArg column="mail_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="title" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="send_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="body" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    mail_id, title, send_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    body
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_mail
+    where mail_id = #{mailId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_mail
+    where mail_id = #{mailId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ncu.mailmanage.pojo.Mail" >
+    insert into t_mail (mail_id, title, send_time, 
+      body)
+    values (#{mailId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{sendTime,jdbcType=TIMESTAMP}, 
+      #{body,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ncu.mailmanage.pojo.Mail" >
+    insert into t_mail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="mailId != null" >
+        mail_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="sendTime != null" >
+        send_time,
+      </if>
+      <if test="body != null" >
+        body,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="mailId != null" >
+        #{mailId,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null" >
+        #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="body != null" >
+        #{body,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ncu.mailmanage.pojo.Mail" >
+    update t_mail
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null" >
+        send_time = #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="body != null" >
+        body = #{body,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where mail_id = #{mailId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.ncu.mailmanage.pojo.Mail" >
+    update t_mail
+    set title = #{title,jdbcType=VARCHAR},
+      send_time = #{sendTime,jdbcType=TIMESTAMP},
+      body = #{body,jdbcType=LONGVARCHAR}
+    where mail_id = #{mailId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ncu.mailmanage.pojo.Mail" >
+    update t_mail
+    set title = #{title,jdbcType=VARCHAR},
+      send_time = #{sendTime,jdbcType=TIMESTAMP}
+    where mail_id = #{mailId,jdbcType=BIGINT}
+  </update>
+</mapper>
