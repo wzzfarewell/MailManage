@@ -7,7 +7,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -23,13 +22,12 @@ import javax.servlet.http.HttpSession;
 public class IndexController {
 
     @RequestMapping(value = {"/", "/index"})
-    public String index(Model model, HttpSession session){
+    public String index(HttpSession session){
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         if(user == null){
             return "login";
         }
         user.setPassword(StringUtils.EMPTY);
-        model.addAttribute(Constant.CURRENT_USER, user);
         session.setAttribute(Constant.CURRENT_USER, user);
         return "index";
     }

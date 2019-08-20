@@ -17,7 +17,7 @@
         <div class="ui centered grid my-padded-tb-big">
             <div class="column" style="max-width: 450px;">
                 <h2 class="ui teal image header">
-                    <img src="../static/img/logo.png" class="image">
+                    <img src="../static/img/logo.png" th:src="@{/img/logo.png}" class="image">
                     <div class="content">
                         注册账户
                     </div>
@@ -40,13 +40,13 @@
                             <label for="gender">性别</label>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="gender" checked tabindex="0" class="hidden">
+                                    <input type="radio" name="gender" value="男" checked tabindex="0" class="hidden">
                                     <label>男</label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox">
-                                    <input type="radio" name="gender" tabindex="0" class="hidden">
+                                    <input type="radio" name="gender" value="女" tabindex="0" class="hidden">
                                     <label>女</label>
                                 </div>
                             </div>
@@ -66,21 +66,30 @@
                         </div>
                         <div class=" field">
                             <label for="">简介</label>
-                            <textarea name="introduction" placeholder="这个人很懒，什么都没留下..."></textarea>
+                            <textarea name="introduction" id="introduction" >这个人很懒，什么都没留下...</textarea>
                         </div>
                         <div class="inline fields">
-                            <div class="field">
+                            <div class="four wide field">
                                 <label for="">验证码</label>
+                            </div>
+                            <div class="seven wide field">
                                 <input type="text" name="valCode" placeholder="">
-                                <img id="checkCode" src="" alt="" class="ui image">
+                            </div>
+                            <div class="five wide field">
+                                <img id="valCode" src="/val/valCode" onclick="changeImg()" th:src="@{/val/valCode}" alt="验证码" class="ui image">
                             </div>
                         </div>
 
-                        <div class="ui fluid large teal submit button">注册</div>
+                        <div>
+                            <ol class="ui list" id="msg">
+
+                            </ol>
+                        </div>
+                        <br/>
+                        <div onclick="loadData();" class="ui fluid large teal  button">注册</div>
                     </div>
 
                     <div class="ui error message"></div>
-
                 </form>
             </div>
         </div>
@@ -93,6 +102,7 @@
     <script>
         $(document)
             .ready(function () {
+                // 日历插件初始化设置
                 $('#date').calendar({
                     type: 'date',
                     formatter: { // 自定义日期的格式
@@ -110,9 +120,11 @@
                         }
                     }
                 });
-
+                // 表单验证
                 $('.ui.form')
                     .form({
+                        inline: true,
+                        on: 'blur',
                         fields: {
                             name: {
                                 identifier: 'name',
@@ -166,29 +178,55 @@
                         }
                     })
                     ;
+                // 单选框
+                $('.ui.radio.checkbox')
+                    .checkbox()
+                ;
             })
             ;
-        $('.ui.radio.checkbox')
-            .checkbox()
-            ;
+
+        function loadData() {
+            var formData = {
+                'name' : $("input[name='name']").val(),
+                'mailAddress' : $("input[name='mailAddress']").val(),
+                'password' : $("input[name='password']").val(),
+                'gender' : $("input[name='gender']:checked").val(),
+                'birthday' : $("input[name='birthday']").val(),
+                'position' : $("input[name='position']").val(),
+                'introduction' : $("#introduction").val(),
+                'valCode' : $("input[name='valCode']").val()
+            };
+            console.log(formData);
+            $.ajax({
+                type: 'POST',
+                data: formData,
+                // contentType: 'application/json',
+                dataType: 'json',
+                url: /*[[@{/register}]]*/"",
+                success: function(json) {
+                    console.log(json);
+                    if(json.success === true){
+                        window.location = /*[[@{/registerSuccess}]]*/'registerSuccess';
+                    }else{
+                        $("#msg").empty();
+                        var lst = json.msg.split(";");
+                        $.each(lst, function (idx, msg) {
+                            $("#msg").append("<li value=\"*\">" + msg + "</li>");
+                        });
+                    }
+                },
+                error: function(xmlHttpRequest, textStatus, errorThrown){
+                    console.log("请求对象XMLHttpRequest: "+XMLHttpRequest);
+                    console.log("错误类型textStatus: "+textStatus);
+                    console.log("异常对象errorThrown: "+errorThrown);
+                }
+            });
+        }
 
         function changeImg() {
-            var imgSrc = $("#checkCodeImg");
-            var src = imgSrc.attr("src");
-            imgSrc.attr("src", chgUrl(src));
+            $("#valCode").attr('src', 'val/valCode?timestamp=' + Date.now().toString());
         }
 
-        //为了使每次生成图片不一致，即不让浏览器读缓存，所以需要加上时间戳
-        function chgUrl(url) {
-            var timestamp = (new Date()).valueOf();
-            url = url.substring(0, 15);
-            if ((url.indexOf("&") >= 0)) {
-                url = url + "×tamp=" + timestamp;
-            } else {
-                url = url + "?timestamp=" + timestamp;
-            }
-            return url;
-        }
     </script>
 </body>
 

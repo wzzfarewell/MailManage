@@ -9,6 +9,7 @@
     <title>个人中心</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
     <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../static/css/calendar.css" th:href="@{/css/calendar.css}">
 </head>
 
 <body>
@@ -67,7 +68,7 @@
                         <div class="ui modal" id="updatePwd">
                             <div class="header">修改密码</div>
                             <div class="content">
-                                <form class="ui form" method="post" th:action="@{/self/updatePwd}">
+                                <form class="ui form" method="post" th:action="@{/self/updatePwd}" id="updatePwdForm">
                                     <div class="field">
                                         <label>原密码</label>
                                         <input type="password" name="oldpwd" >
@@ -134,7 +135,7 @@
                                            data-position="bottom center">
                                             <i class="qq icon"></i>
                                         </a>
-                                        <a style="float: right;">
+                                        <a style="float: right;" href="javascript:void(0);" onclick="updateInfo()">
                                             <i class="edit icon"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
                                             修改
                                         </font></font></a>
@@ -147,6 +148,83 @@
             </div>
 
         </div>
+        </div>
+    </div>
+
+    <input type="hidden" th:value="${message}" id="message" />
+
+    <div class="ui modal" id="updateInfo">
+        <i class="close icon"></i>
+        <div class="header"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+            修改个人资料
+        </font></font></div>
+        <div class="image content">
+            <div class="ui medium image">
+                <img src="../static/img/kristy.png" th:src="@{/img/kristy.png}">
+            </div>
+            <div class="description">
+
+                <form class="ui large form" id="updateInfoForm">
+                    <div class="ui stacked segment">
+                        <div class="disabled field">
+                            <label for="">用户名</label>
+                            <input type="text" readonly name="name" placeholder="用户名" th:value="${session.user.getName()}">
+                        </div>
+                        <div class="required field">
+                            <label for="">邮件地址（只能是@mail.com为后缀的地址）</label>
+                            <input type="email" name="mailAddress" placeholder="@mail.com" th:value="${session.user.getMailAddress()}">
+                        </div>
+                        <div class="inline fields">
+                            <label for="gender">性别</label><br/>
+                            <div class="ui selection dropdown">
+                                <input type="hidden" name="gender" th:value="${session.user.getGender()}">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Gender</div>
+                                <div class="menu">
+                                    <div class="item" data-value="1">男</div>
+                                    <div class="item" data-value="0">女</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="">出生日期</label>
+                            <div class="ui calendar" id="date">
+                                <div class="ui input left icon">
+                                    <i class="calendar icon"></i>
+                                    <input type="text" name="birthday" placeholder="Date" value="1998-01-01" th:value="${session.user.getBirthday()}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="">职务</label>
+                            <input type="text" name="position" placeholder="Java工程师" th:value="${session.user.getPosition()}">
+                        </div>
+                        <div class=" field">
+                            <label for="">简介</label>
+                            <textarea name="introduction" id="introduction" th:text="${introduction}" >这个人很懒，什么都没留下...</textarea>
+                        </div>
+
+                        <div>
+                            <ol class="ui list" id="msg">
+
+                            </ol>
+                        </div>
+
+                    </div>
+
+                    <div class="ui error message"></div>
+                </form>
+
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui black deny button"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                算了
+            </font></font></div>
+            <div class="ui positive right labeled icon button" onclick="loadData();"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                提交
+            </font></font><i class="checkmark icon"></i>
+            </div>
         </div>
     </div>
 
@@ -171,7 +249,57 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script src="../static/js/calendar.js" th:src="@{/js/calendar.js}"></script>
     <script>
+
+        $(document)
+            .ready(function () {
+                // 日历插件初始化设置
+                $('#date').calendar({
+                    type: 'date',
+                    formatter: { // 自定义日期的格式
+                        date: function (date, settings) {
+                            if (!date) return '';
+
+                            var year = date.getFullYear();
+                            var month = date.getMonth() + 1;
+                            var day = date.getDate();
+
+                            month = month < 10 ? '0' + month : month;
+                            day = day < 10 ? '0' + day : day;
+
+                            return year + '-' + month + '-' + day;
+                        }
+                    }
+                });
+                // 表单验证
+                $('#updateInfoForm')
+                    .form({
+                        inline: true,
+                        on: 'blur',
+                        fields: {
+
+                            mailAddress: {
+                                identifier: 'mailAddress',
+                                rules: [
+                                    {
+                                        type: 'empty',
+                                        prompt: '请输入您的邮箱地址'
+                                    },
+                                    {
+                                        type: 'regExp',
+                                        value: /^[a-zA-Z_]\w{0,9}@mail.com$/,
+                                        prompt: '邮箱地址不合法，字母数字下划线1到10位, 不能是数字开头，后缀为@mail.com'
+                                    }
+                                ]
+                            }
+                        }
+                    })
+                ;
+
+            })
+        ;
+
         $('.menu.toggle').click(function () {
             $('.m-item ').toggleClass('my-mobile-hidden');
         });
@@ -179,16 +307,21 @@
         $('.special.cards .image').dimmer({
             on: 'hover'
         });
+        $('select.dropdown')
+            .dropdown()
+        ;
         function updatePwd() {
             $('#updatePwd')
                 .modal('show')
             ;
         }
 
-        $('.ui.form')
+        $('#updatePwdForm')
             .form({
+
                 fields: {
                     oldpwd: {
+                        identifier: 'oldpwd',
                         rules: [
                             {
                                 type   : 'empty',
@@ -206,6 +339,10 @@
                             {
                                 type   : 'minLength[6]',
                                 prompt : '新密码长度不能少于6位'
+                            },
+                            {
+                                type   : 'match[oldpwd]',
+                                prompt : '新旧密码不能一致'
                             }
                         ]
                     },
@@ -221,6 +358,57 @@
                 }
             })
         ;
+
+        $(function () {
+            var message=$("#message").val();
+           if (message!=""){
+               alert(message);
+           }
+        });
+
+        function updateInfo() {
+            $('#updateInfo')
+                .modal('show')
+            ;
+        }
+
+
+        function loadData() {
+            var formData = {
+                'name' : $("input[name='name']").val(),
+                'mailAddress' : $("input[name='mailAddress']").val(),
+                'gender' : $("input[name='gender']:checked").val(),
+                'birthday' : $("input[name='birthday']").val(),
+                'position' : $("input[name='position']").val(),
+                'introduction' : $("#introduction").val(),
+            };
+            console.log(formData);
+            $.ajax({
+                type: 'POST',
+                data: formData,
+                // contentType: 'application/json',
+                dataType: 'json',
+                url: /*[[@{/register}]]*/"",
+                success: function(json) {
+                    console.log(json);
+                    if(json.success === true){
+                        window.location = /*[[@{/registerSuccess}]]*/'registerSuccess';
+                    }else{
+                        $("#msg").empty();
+                        var lst = json.msg.split(";");
+                        $.each(lst, function (idx, msg) {
+                            $("#msg").append("<li value=\"*\">" + msg + "</li>");
+                        });
+                    }
+                },
+                error: function(xmlHttpRequest, textStatus, errorThrown){
+                    console.log("请求对象XMLHttpRequest: "+XMLHttpRequest);
+                    console.log("错误类型textStatus: "+textStatus);
+                    console.log("异常对象errorThrown: "+errorThrown);
+                }
+            });
+        }
+
 
     </script>
 </body>

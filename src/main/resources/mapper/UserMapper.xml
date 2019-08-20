@@ -9,11 +9,11 @@
     <result column="birthday" property="birthday"/>
     <result column="mail_address" property="mailAddress"/>
     <result column="position" property="position"/>
+    <result column="introduction" property="introduction"/>
     <result column="avatar" property="avatar"/>
     <result column="locked" property="locked"/>
     <result column="create_time" property="createTime"/>
     <result column="update_time" property="updateTime"/>
-    <result column="introduction" property="introduction"/>
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.ncu.mailmanage.pojo.User" >
     <constructor >
@@ -50,7 +50,7 @@
     delete from t_user
     where user_id = #{userId,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.ncu.mailmanage.pojo.User" >
+  <insert id="insert" parameterType="com.ncu.mailmanage.pojo.User"  >
     insert into t_user (user_id, birthday, create_time, 
       gender, mail_address, name, 
       position, update_time, avatar, 
@@ -213,6 +213,11 @@
   <select id="findByUsername" resultMap="BaseResultMap">
     select <include refid="Base_Column_List"/>
     from t_user where t_user.name = #{username}
+  </select>
+
+  <select id="findByMailAddress" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from t_user where t_user.mail_address = #{mailAddress}
   </select>
 
   <select id="findIntroductionByUserId" resultType="String">

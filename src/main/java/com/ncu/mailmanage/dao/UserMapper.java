@@ -20,4 +20,6 @@ public interface UserMapper {
     User findByUsername(String username);
 
     String findIntroductionByUserId(Long userId);
+
+    User findByMailAddress(String mailAddress);
 }

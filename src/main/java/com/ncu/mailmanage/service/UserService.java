@@ -1,5 +1,6 @@
 package com.ncu.mailmanage.service;
 
+import com.ncu.mailmanage.global.ServerResponse;
 import com.ncu.mailmanage.pojo.User;
 
 import java.util.List;
@@ -18,4 +19,7 @@ public interface UserService {
 
     String findIntroductionByUserId(Long userId);
 
+    int updatePassword(User user);
+
+    ServerResponse register(User user);
 }
