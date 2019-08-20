@@ -2,6 +2,8 @@ package com.ncu.mailmanage.dao;
 
 import com.ncu.mailmanage.pojo.User;
 
+import java.util.List;
+
 public interface UserMapper {
     int deleteByPrimaryKey(Long userId);
 
@@ -20,4 +22,6 @@ public interface UserMapper {
     User findByUsername(String username);
 
     User findByMailAddress(String mailAddress);
+
+    List<User> listByNotLocked();
 }

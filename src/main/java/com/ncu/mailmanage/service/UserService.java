@@ -1,5 +1,6 @@
 package com.ncu.mailmanage.service;
 
+import com.github.pagehelper.PageInfo;
 import com.ncu.mailmanage.global.ServerResponse;
 import com.ncu.mailmanage.pojo.User;
 
@@ -18,4 +19,6 @@ public interface UserService {
     List<String> findPermissionsByUserId(Long userId);
 
     ServerResponse register(User user);
+
+    PageInfo<User> listNotLocked(int pageNum, int pageSize);
 }

@@ -1,5 +1,7 @@
 package com.ncu.mailmanage.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ncu.mailmanage.dao.PermissionMapper;
 import com.ncu.mailmanage.dao.UserMapper;
 import com.ncu.mailmanage.global.ResponseCode;
@@ -10,7 +12,6 @@ import com.ncu.mailmanage.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,5 +61,12 @@ public class UserServiceImpl implements UserService {
             return ServerResponse.createBySuccessMessage("注册成功");
         }
         return ServerResponse.createByErrorMessage("注册失败");
+    }
+
+    @Override
+    public PageInfo<User> listNotLocked(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<User> users = userMapper.listByNotLocked();
+        return new PageInfo<>(users);
     }
 }
