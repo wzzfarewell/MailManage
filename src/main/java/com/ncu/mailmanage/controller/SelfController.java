@@ -42,7 +42,7 @@ public class SelfController {
         User user=(User) session.getAttribute(Constant.CURRENT_USER);
         String check=userService.findByUsername(user.getName()).getPassword();
         if (oldpwd.equals(check)){
-            
+
         }
         return "self";     //要注销当前账号重新登录
     }
