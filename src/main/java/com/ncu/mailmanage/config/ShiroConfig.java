@@ -1,6 +1,7 @@
 package com.ncu.mailmanage.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import com.ncu.mailmanage.global.Constant;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -28,16 +29,10 @@ public class ShiroConfig {
     public HashedCredentialsMatcher hashedCredentialsMatcher(){
         HashedCredentialsMatcher matcher = new HashedCredentialsMatcher();
         // md5加密4次
-        matcher.setHashAlgorithmName("md5");
-        matcher.setHashIterations(4);
+        matcher.setHashAlgorithmName(Constant.ALGORITHM_NAME);
+        matcher.setHashIterations(Constant.HASH_ITERATIONS);
         return matcher;
     }
-
-//    public static void main(String[] args) {
-//        Object salt = ByteSource.Util.bytes("farewell");
-//        Object result = new SimpleHash("md5", "123456", salt, 4);
-//        System.out.println(result);
-//    }
 
     /**
      * 自定义的Realm
@@ -79,8 +74,12 @@ public class ShiroConfig {
         map.put("/css/**", "anon");
         map.put("/js/**", "anon");
         map.put("/error/**", "anon");
+        // 登录，注册
         map.put("/login", "anon");
         map.put("/register", "anon");
+        map.put("/registerSuccess", "anon");
+        // 获取验证码
+        map.put("/val/**", "anon");
         // 配置退出过滤器,其中的具体的退出代码 Shiro 已经替我们实现了
         map.put("/logout", "logout");
         map.put("/favicon.ico", "anon");

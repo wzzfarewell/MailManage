@@ -14,7 +14,7 @@
 <body>
 
 <!-- 导航 -->
-<nav th:replace="_framents :: menu(1)" class="ui  attached segment my-padded-tb-mini my-shadow-small">
+<nav class="ui  attached segment my-padded-tb-mini my-shadow-small">
     <div class="ui container">
         <div class="ui  secondary stackable menu">
             <h2 class="ui teal header item">Mail</h2>
@@ -28,18 +28,6 @@
             <a href="#" shiro:hasPermission="lockUser" th:href="@{/lockUser}"
                class=" m-item item my-mobile-hidden"><i class="lock icon"></i>锁定非法用户</a>
 
-            <div class="right m-item item my-mobile-hidden menu">
-                <div class="ui dropdown item">
-                    <div class="text">
-                        <img class="ui avatar image" src="https://picsum.photos/id/1000/100/100">
-                        <span th:text="${user.name}">farewell</span>
-                    </div>
-                    <i class="dropdown icon"></i>
-                    <div class="menu">
-                        <a href="/logout" class="item"><i class="sign-out icon"></i>登出</a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <a href="#" class="ui menu toggle icon button my-right-top my-mobile-show">
@@ -60,7 +48,7 @@
                     <br/>
                     <br/>
                     <br/>
-                    <div class="ui header">邮件已删除...</div>
+                    <div class="ui header">用户注册成功...</div>
                     <span id="second" style="font-size: 24px;">5</span>&nbsp;秒后跳转到<a href="index.html" th:href="@{/index}">首页</a>
                 </div>
             </div>
@@ -115,7 +103,7 @@
         if (num == 0) { window.location = URL; }
     }
     jQuery(function ($) {
-        var url = /*[[@{/index}]]*/"";
+        var url = /*[[@{/index}]]*/"index";
         Load(url);
     });
 </script>

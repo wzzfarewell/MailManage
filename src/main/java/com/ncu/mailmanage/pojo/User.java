@@ -1,5 +1,6 @@
 package com.ncu.mailmanage.pojo;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 public class User {
@@ -9,10 +10,13 @@ public class User {
 
     private Date createTime;
 
+    @NotBlank(message = "用户性别不能为空")
     private String gender;
 
+    @NotBlank(message = "用户邮箱地址不能为空")
     private String mailAddress;
 
+    @NotBlank(message = "用户名不能为空")
     private String name;
 
     private String position;
@@ -21,6 +25,7 @@ public class User {
 
     private String avatar;
 
+    @NotBlank(message = "用户密码不能为空")
     private String password;
 
     private Boolean locked;
@@ -140,5 +145,23 @@ public class User {
 
     public void setIntroduction(String introduction) {
         this.introduction = introduction == null ? null : introduction.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", birthday=" + birthday +
+                ", createTime=" + createTime +
+                ", gender='" + gender + '\'' +
+                ", mailAddress='" + mailAddress + '\'' +
+                ", name='" + name + '\'' +
+                ", position='" + position + '\'' +
+                ", updateTime=" + updateTime +
+                ", avatar='" + avatar + '\'' +
+                ", password='" + password + '\'' +
+                ", locked=" + locked +
+                ", introduction='" + introduction + '\'' +
+                '}';
     }
 }
