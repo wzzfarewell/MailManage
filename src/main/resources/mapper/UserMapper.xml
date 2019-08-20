@@ -225,4 +225,18 @@
     select <include refid="Base_Column_List"/>
     from t_user where t_user.locked = false
   </select>
+
+  <select id="listByConditionAndNotLocked" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from t_user
+    <where>
+      <if test="name != null">
+        `name` like #{name}
+      </if>
+      <if test="mailAddress != null">
+        and mail_address = #{mailAddress}
+      </if>
+      and locked = false
+    </where>
+  </select>
 </mapper>

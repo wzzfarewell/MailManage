@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -23,10 +22,6 @@
             <a href="inbox.html" class=" m-item item my-mobile-hidden"><i class="inbox icon"></i>收件箱</a>
             <a href="sent.html" class=" m-item item my-mobile-hidden"><i class="envelope icon"></i>已发送</a>
             <a href="self.html" class=" m-item item my-mobile-hidden"><i class="user icon"></i>用户中心</a>
-            <a href="#" shiro:hasPermission="deleteMail" th:href="@{/deleteMail}"
-               class=" m-item item my-mobile-hidden"><i class="delete icon"></i>删除非法邮件</a>
-            <a href="#" shiro:hasPermission="lockUser" th:href="@{/lockUser}"
-               class=" m-item item my-mobile-hidden"><i class="lock icon"></i>锁定非法用户</a>
 
         </div>
     </div>

@@ -21,4 +21,8 @@ public interface UserService {
     ServerResponse register(User user);
 
     PageInfo<User> listNotLocked(int pageNum, int pageSize);
+
+    int lockUserById(Long userId);
+
+    PageInfo<User> searchByCondition(int pageNum, int pageSize, String name, String mailAddress);
 }

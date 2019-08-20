@@ -1,6 +1,10 @@
 package com.ncu.mailmanage.dao;
 
 import com.ncu.mailmanage.pojo.Mail;
+import com.ncu.mailmanage.vo.MailVo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface MailMapper {
     int deleteByPrimaryKey(Long mailId);
@@ -16,4 +20,8 @@ public interface MailMapper {
     int updateByPrimaryKeyWithBLOBs(Mail record);
 
     int updateByPrimaryKey(Mail record);
+
+    List<MailVo> listAll();
+
+    List<MailVo> listByCondition(@Param("title") String title, @Param("sender") String sender, @Param("receiver") String receiver);
 }

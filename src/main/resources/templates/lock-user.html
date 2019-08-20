@@ -48,7 +48,8 @@
 
 <div class="my-container my-padded-tb-large">
     <div class="ui container">
-        <form action="#" method="POST" class="ui segment form">
+        <form  method="POST" class="ui segment form">
+            <input type="hidden" name="pageNum"/>
             <div class="inline fields">
                 <div class="field">
                     <input type="text" name="username" placeholder="用户名" class="">
@@ -57,13 +58,18 @@
                     <input type="text" name="mailAddress" placeholder="邮箱地址">
                 </div>
                 <div class="field">
-                    <button class="ui teal mini button">
+                    <a id="search-btn" onclick="page(this)" th:attr="data-page=1" class="ui teal mini button">
                         <i class="search icon"></i>
                         搜索
-                    </button>
+                    </a>
                 </div>
             </div>
         </form>
+        <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
+            <i class="close icon"></i>
+            <div class="header">提示：</div>
+            <p th:text="${message}">恭喜，操作成功！</p>
+        </div>
         <div id="table-container">
             <table th:fragment="userList" class="ui celled table">
                 <thead>
@@ -86,7 +92,7 @@
                     <td th:text="${user.position}">Java工程师</td>
                     <td th:text="${#dates.format(user.createTime, 'yyyy-MM-dd HH:mm:ss')}">2019-8-19</td>
                     <td>
-                        <a th:unless="${user.name == session.user.name}" href="#" class="ui basic mini red button">锁定</a>
+                        <a th:unless="${user.name == session.user.name}" th:href="@{/lockUser/} + ${user.userId}" href="#" class="ui basic mini red button">锁定</a>
                     </td>
                 </tr>
                 <!--/*-->
@@ -107,10 +113,10 @@
                 <tr>
                     <th colspan="7">
                         <div class="ui mini left floated pagination menu">
-                            <a class="item">
+                            <a class="item" onclick="page(this)" th:attr="data-page=${page.pageNum - 1}" th:unless="${page.isFirstPage}">
                                 上一页
                             </a>
-                            <a class="item">
+                            <a class="item" onclick="page(this)" th:attr="data-page=${page.pageNum + 1}" th:unless="${page.isLastPage}">
                                 下一页
                             </a>
                         </div>
@@ -134,10 +140,35 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-<script>
+<script th:inline="javascript">
     $('.menu.toggle').click(function () {
         $('.m-item ').toggleClass('my-mobile-hidden');
     });
+    //消息提示关闭初始化
+    $('.message .close').on('click', function () {
+        $(this)
+            .closest('.message')
+            .transition('fade');
+    });
+
+    function page(obj) {
+        console.log($(obj).data("page"));
+        $("[name='pageNum']").val($(obj).data("page"));
+        loadUserTable();
+    }
+    
+    function loadUserTable() {
+        /*<![CDATA[*/
+        var url= /*[[@{/lockUser/search}]]*/"lockUser/search";
+        /*]]>*/
+        $("#table-container").load(url,
+            {
+                'name' : $("[name='username']").val(),
+                'mailAddress' : $("[name='mailAddress']").val(),
+                'pageNum' : $("[name='pageNum']").val()
+            }
+        );
+    }
 </script>
 </body>
 
