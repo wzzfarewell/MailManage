@@ -25,4 +25,6 @@ public interface UserService {
     int lockUserById(Long userId);
 
     PageInfo<User> searchByCondition(int pageNum, int pageSize, String name, String mailAddress);
+
+    List<User> listContacts(Long userId);
 }

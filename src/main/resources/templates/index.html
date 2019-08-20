@@ -19,8 +19,8 @@
         <div class="ui  secondary stackable menu">
             <h2 class="ui teal header item">Mail</h2>
             <a href="#" th:href="@{/index}" class="active m-item item my-mobile-hidden"><i class="home icon"></i>首页</a>
-            <a href="write-mail.html" class=" m-item item my-mobile-hidden"><i class="edit icon"></i>写信</a>
-            <a href="inbox.html" class=" m-item item my-mobile-hidden"><i class="inbox icon"></i>收件箱</a>
+            <a href="#" th:href="@{/write-mail}" class=" m-item item my-mobile-hidden"><i class="edit icon"></i>写信</a>
+            <a href="#" th:href="@{/inbox}" class=" m-item item my-mobile-hidden"><i class="inbox icon"></i>收件箱</a>
             <a href="sent.html" class=" m-item item my-mobile-hidden"><i class="envelope icon"></i>已发送</a>
             <a href="self.html" class=" m-item item my-mobile-hidden"><i class="user icon"></i>用户中心</a>
             <a href="#" shiro:hasPermission="deleteMail" th:href="@{/deleteMail}" class=" m-item item my-mobile-hidden"><i class="delete icon"></i>删除非法邮件</a>

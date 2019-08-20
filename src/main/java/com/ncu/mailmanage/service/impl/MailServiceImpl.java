@@ -58,4 +58,9 @@ public class MailServiceImpl implements MailService {
         }
         return new PageInfo<>(mailVos);
     }
+
+    @Override
+    public int setMail(MailVo mailVo) {
+        return 0;
+    }
 }

@@ -27,4 +27,5 @@ public interface UserMapper {
     List<User> listByNotLocked();
 
     List<User> listByConditionAndNotLocked(@Param("name") String name, @Param("mailAddress") String mailAddress);
+
 }
