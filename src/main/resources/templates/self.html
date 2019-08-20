@@ -32,7 +32,7 @@
                     <div class="ui dropdown item">
                         <div class="text">
                             <img class="ui avatar image" src="https://picsum.photos/id/1000/100/100">
-                            <span th:text="${user.name}">farewell</span>
+                            <span th:text="${session.user.name}">farewell</span>
                         </div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
@@ -57,13 +57,37 @@
                     <div class="ui grid">
                         <div class="four wide column">
                             <p><i class="user icon"></i> <span
-                                    style="color: blue;">farewell&lt;farewell@mail.com&gt;</span>
+                                    style="color: blue;" th:text="${session.user.mailAddress}">farewell&lt;farewell@mail.com&gt;</span>
                             </p>
                         </div>
                         <div class="ui eight wide column"></div>
                         <div class="ui four wide column">
-                            <a href="" class="ui primary small button">修改密码</a>
+                            <a href="javascript:void(0);" onclick="updatePwd()" class="ui primary small button">修改密码</a>
                         </div>
+                        <div class="ui modal" id="updatePwd">
+                            <div class="header">修改密码</div>
+                            <div class="content">
+                                <form class="ui form" method="post" th:action="@{/self/updatePwd}">
+                                    <div class="field">
+                                        <label>原密码</label>
+                                        <input type="password" name="oldpwd" >
+                                    </div>
+
+                                    <div class="field">
+                                        <label>新密码</label>
+                                        <input type="password" name="newpwd1" >
+                                    </div>
+                                    <div class="field">
+                                        <label>确认新密码</label>
+                                        <input type="password" name="newpwd2" >
+                                    </div>
+                                    <button class="ui button" type="submit">确认</button>
+                                    <div class="ui error message"></div>
+                                </form>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
                 <div class="ui segment">
@@ -74,37 +98,55 @@
                             </div>
                         </div>
                         <div class="five wide column">
-                            <div class="ui top attached segment">
-                                <div class="ui header">farewell</div>
-                            </div>
-                            <div class="ui attached segment">
-                                邮箱：<p class="my-text"><span style="color: blue;">&lt;farewell@mail.com&gt;</span></p>
-                            </div>
-                            <div class="ui attached segment">
-                                生日：<p class="my-text">1998-01-01</p>
-                            </div>
-                            <div class="ui attached segment">
-                                简介：<p class="my-text">这个人很懒，什么都没有留下...</p>
-                            </div>
+                            <div class="ui special cards">
+                                <div class="card">
+                                    <div class="blurring dimmable image">
+                                        <div class="ui dimmer">
+                                            <div class="content">
+                                                <div class="center">
+                                                    <div class="ui inverted button">修改头像</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <img src="../static/img/kristy.png" th:src="@{/img/kristy.png}">
+                                    </div>
+                                    <div class="content">
+                                        <a class="header"  th:text="${session.user.name}">Team Fu</a>
+                                        <div class="meta">
+                                            <span class="date">Created in Sep 2014</span>
+                                        </div>
+                                        <div class="meta" th:text="${session.user.position}">
+                                            测试工程师
+                                        </div>
 
-                            <div class="ui bottom attached segment">
-                                <a href="#" class="ui circular icon button">
-                                    <i class="github icon"></i>
-                                </a>
-                                <a href="#" class="ui wechat circular icon button">
-                                    <i class="weixin icon"></i>
-                                </a>
-                                <a href="#" class="ui qq circular icon button" data-content="364134875"
-                                    data-position="bottom center">
-                                    <i class="qq icon"></i>
-                                </a>
-                            </div>
+                                        <div class="description" th:text="${introduction}"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                                            这个人很懒什么都没留下...
+                                        </font></font></div>
+                                    </div>
+                                    <div class="extra content">
+                                        <a href="#" class="ui circular icon button">
+                                            <i class="github icon"></i>
+                                        </a>
+                                        <a href="#" class="ui wechat circular icon button">
+                                            <i class="weixin icon"></i>
+                                        </a>
+                                        <a href="#" class="ui qq circular icon button" data-content="364134875"
+                                           data-position="bottom center">
+                                            <i class="qq icon"></i>
+                                        </a>
+                                        <a style="float: right;">
+                                            <i class="edit icon"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                                            修改
+                                        </font></font></a>
+                                    </div>
+                                </div>
                         </div>
                     </div>
 
                 </div>
             </div>
 
+        </div>
         </div>
     </div>
 
@@ -134,6 +176,52 @@
             $('.m-item ').toggleClass('my-mobile-hidden');
         });
         $(".ui.dropdown").dropdown();
+        $('.special.cards .image').dimmer({
+            on: 'hover'
+        });
+        function updatePwd() {
+            $('#updatePwd')
+                .modal('show')
+            ;
+        }
+
+        $('.ui.form')
+            .form({
+                fields: {
+                    oldpwd: {
+                        rules: [
+                            {
+                                type   : 'empty',
+                                prompt : '原密码不能为空'
+                            }
+                        ]
+                    },
+                    newpwd1: {
+                        identifier: 'newpwd1',
+                        rules: [
+                            {
+                                type   : 'empty',
+                                prompt : '新密码不能为空'
+                            },
+                            {
+                                type   : 'minLength[6]',
+                                prompt : '新密码长度不能少于6位'
+                            }
+                        ]
+                    },
+                    newpwd2: {
+                        identifier: 'newpwd2',
+                        rules: [
+                            {
+                                type   : 'match[newpwd1]',
+                                prompt : '两次密码必须一致'
+                            }
+                        ]
+                    },
+                }
+            })
+        ;
+
     </script>
 </body>
 

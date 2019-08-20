@@ -15,4 +15,7 @@ public interface UserService {
     User findByUsername(String username);
 
     List<String> findPermissionsByUserId(Long userId);
+
+    String findIntroductionByUserId(Long userId);
+
 }

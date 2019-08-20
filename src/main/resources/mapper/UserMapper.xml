@@ -13,6 +13,7 @@
     <result column="locked" property="locked"/>
     <result column="create_time" property="createTime"/>
     <result column="update_time" property="updateTime"/>
+    <result column="introduction" property="introduction"/>
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.ncu.mailmanage.pojo.User" >
     <constructor >
@@ -213,4 +214,10 @@
     select <include refid="Base_Column_List"/>
     from t_user where t_user.name = #{username}
   </select>
+
+  <select id="findIntroductionByUserId" resultType="String">
+    select <include refid="Blob_Column_List"/>
+    from t_user where t_user.user_id = #{userId,jdbcType=BIGINT}
+  </select>
+
 </mapper>

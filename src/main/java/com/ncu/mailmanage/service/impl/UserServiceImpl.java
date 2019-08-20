@@ -36,4 +36,9 @@ public class UserServiceImpl implements UserService {
     public List<String> findPermissionsByUserId(Long userId) {
         return permissionMapper.findByUserId(userId);
     }
+
+    @Override
+    public String findIntroductionByUserId(Long userId) {
+        return userMapper.findIntroductionByUserId(userId);
+    }
 }
