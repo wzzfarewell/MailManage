@@ -109,6 +109,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ServerResponse updateByUserId(User user) {
+        user.setPassword(userMapper.findByUsername(user.getName()).getPassword());
         int resultCount=userMapper.updateByPrimaryKeyWithBLOBs(user);
         if(resultCount > 0){
             return ServerResponse.createBySuccessMessage("修改成功");

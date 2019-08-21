@@ -64,14 +64,23 @@ public class SelfController {
 
     @PostMapping("/updateInfo")
     @ResponseBody
-    public ServerResponse doRegister(User info, HttpSession session){
+    public ServerResponse updateInfo(User info, HttpSession session){
         User user=(User)session.getAttribute(Constant.CURRENT_USER);
-
         user.setMailAddress(info.getMailAddress());
         user.setBirthday(info.getBirthday());
         user.setPosition(info.getPosition());
         user.setIntroduction(info.getIntroduction());
         LOG.info("修改用户信息：\n" + user.toString());
+
+        return userService.updateByUserId(user);
+    }
+
+    @PostMapping("/updateAvatar")
+    @ResponseBody
+    public ServerResponse updateAvatar(String avatar, HttpSession session){
+        User user=(User)session.getAttribute(Constant.CURRENT_USER);
+        user.setAvatar(avatar);
+        LOG.info("修改头像：\n" + user.getAvatar());
 
         return userService.updateByUserId(user);
     }

@@ -109,7 +109,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <img src="../static/img/kristy.png" th:src="@{/img/kristy.png}">
+                                        <img id="ava" src="../static/img/kristy.png" th:src="${session.user.getAvatar()}">
                                     </div>
                                     <div class="content">
                                         <a class="header"  th:text="${session.user.name}">Team Fu</a>
@@ -162,7 +162,7 @@
             <div class="ui grid">
                 <div class="six wide column">
                     <div class="ui medium image">
-                    <img src="../static/img/kristy.png" th:src="@{/img/kristy.png}">
+                    <img id="ava1" src="../static/img/kristy.png" th:src="${session.user.getAvatar()}">
                 </div>
                 </div>
                 <div class="eight wide column">
@@ -229,14 +229,14 @@
     <div class="ui modal" id="updateAvatar">
         <i class="close icon"></i>
         <div class="header"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
-            修改头像
+            选择一个头像
         </font></font></div>
         <div class="image content">
             <div class="ui medium image">
-                <img src="../static/img/kristy.png" th:src="@{/img/kristy.png}">
+                <img id="ava2" src="../static/img/kristy.png" th:src="${session.user.getAvatar()}">
             </div>
             <div class="description">
-                <div class="ui small images">
+                <div class="ui small images" id="avatar">
                     <img class="ui image" src="../static/img/kristy.png" th:src="@{/img/kristy.png}">
                     <img class="ui image" src="../static/img/daniel.png" th:src="@{/img/daniel.png}">
                     <img class="ui image" src="../static/img/elyse.png" th:src="@{/img/elyse.png}"><br/>
@@ -246,15 +246,7 @@
                 </div>
             </div>
         </div>
-        <div class="actions">
-            <div class="ui black deny button"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
-                算了
-            </font></font></div>
-            <div class="ui positive right labeled icon button"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
-                选好了
-            </font></font><i class="checkmark icon"></i>
-            </div>
-        </div>
+
     </div>
 
     <br />
@@ -437,6 +429,40 @@
                 }
             });
         }
+
+        $(function () {
+            $("#avatar img").click(function () {
+                var src = $(this).attr("src");
+                var avatar = { 'avatar' : $(this).attr("src") };
+                $(this).css("border","#28FF28 3px solid");
+
+                $.ajax({
+                    type: 'POST',
+                    data: avatar,
+
+                    dataType: 'json',
+                    url: 'self/updateAvatar',
+                    success: function(json) {
+                        console.log(json);
+                        if(json.success === true){
+                            alert("修改成功");
+                            $('#updateAvatar').modal('hide');
+                            $('#ava').attr("src",src);
+                            $('#ava1').attr("src",src);
+                            $('#ava2').attr("src",src);
+                        }else{
+                            alert("修改失败");
+                        }
+                    },
+                    error: function(xmlHttpRequest, textStatus, errorThrown){
+                        console.log("请求对象XMLHttpRequest: "+XMLHttpRequest);
+                        console.log("错误类型textStatus: "+textStatus);
+                        console.log("异常对象errorThrown: "+errorThrown);
+                    }
+                });
+
+            });
+        });
 
 
     </script>
