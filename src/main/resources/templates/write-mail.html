@@ -32,7 +32,7 @@
                 <div class="ui dropdown item">
                     <div class="text">
                         <img class="ui avatar image" src="https://picsum.photos/id/1000/100/100">
-                        <span th:text="${user.name}">farewell</span>
+                        <span th:text="${session.user.name}">farewell</span>
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
@@ -49,29 +49,29 @@
 
 <div class="my-container my-padded-tb-large">
     <div class="ui container">
+        <form th:action="@{/sentMail}" class="ui form">
+            <input hidden name="sender" th:value="${session.user.name}"/>
         <div class="ui segments">
             <div class="ui segment">
-                <a class="ui active teal small button">
+                <button type="submit" class="ui active teal small button">
                     <i class="paper plane icon"></i>发送
-                </a>
+                </button>
                 <a class="ui  teal small button">
                     存草稿
                 </a>
-                <a class="ui  teal small button">
+                <button type="reset" class="ui  teal small button">
                     取消
-                </a>
+                </button>
             </div>
             <div class="ui segment">
-                <form th:action="@{/sentMail}" class="ui form">
-                    <input hidden name="sendTime"/>
                     <div class="inline fields">
                         <div class="two wide field">
                             <label for="">收件人：</label>
                         </div>
                         <div class="fourteen wide field">
-                            <select name="receiver" th:each="contacts : ${contactsList}">
-                                <!--<option disabled>&#45;&#45;选择收件人&#45;&#45;</option>-->
-                                <option>${contacts.name}</option>
+                            <select name="receiver">
+                                <option disabled selected>--选择收件人--</option>
+                                <option th:each="contacts : ${contactsList}" th:text="${contacts.name}"></option>
                             </select>
 
                         </div>
@@ -97,19 +97,20 @@
                         <input name="fileName" readonly />
                         <input type="file" name="file" style="display: none;" onchange="javascript:$('input[name=\'fileName\']').val(this.files[0].name);" />
                     </div>
-                </form>
                 <div class="ui  section divider"></div>
-                <i class="user icon"></i> 发件人：<span style="color: blue;" th:text="${user.name}&lt;${user.mailAddress}&gt;">farewell&lt;farewell@mail.com&gt;</span>
+                <i class="user icon"></i> 发件人：<span style="color: blue;" th:text="${session.user.name}+'&lt;'+${session.user.mailAddress}+'&gt;'">farewell&lt;farewell@mail.com&gt;</span>
+                <!---->
             </div>
             <div class="ui  segment">
-                <button class="ui active teal small submit button">
+                <button type="submit" class="ui active teal small button">
                     <i class="paper plane icon"></i>发送
                 </button>
-                <button class="ui  teal small reset button">
+                <button type="reset" class="ui teal small button">
                     取消
                 </button>
             </div>
         </div>
+        </form>
     </div>
 </div>
 

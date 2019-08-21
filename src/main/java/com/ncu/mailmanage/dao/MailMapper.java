@@ -13,6 +13,10 @@ public interface MailMapper {
 
     int insertSelective(Mail record);
 
+    int insertSendMail(@Param(value = "userId")Long userId,@Param(value = "maildId")Long maildId);
+
+    int insertReceiveMail(@Param(value = "userId")Long userId,@Param(value = "maildId")Long maildId);
+
     Mail selectByPrimaryKey(Long mailId);
 
     int updateByPrimaryKeySelective(Mail record);

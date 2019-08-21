@@ -3,6 +3,7 @@ package com.ncu.mailmanage.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ncu.mailmanage.dao.MailMapper;
+import com.ncu.mailmanage.dao.UserMapper;
 import com.ncu.mailmanage.pojo.Mail;
 import com.ncu.mailmanage.service.MailService;
 import com.ncu.mailmanage.vo.MailVo;
@@ -22,6 +23,8 @@ import java.util.List;
 public class MailServiceImpl implements MailService {
     @Autowired
     private MailMapper mailMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public int deleteMailById(Long id) {
@@ -61,6 +64,20 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public int setMail(MailVo mailVo) {
-        return 0;
+        int result=0;
+        Mail mail=new Mail();
+        mail.setTitle(mailVo.getTitle());
+        mail.setBody(mailVo.getBody());
+        mail.setSendTime(mailVo.getSendTime());
+        result=mailMapper.insertSelective(mail);
+
+        System.out.println(mailVo.getSender());
+        Long mailId=mail.getMailId();
+        Long senderId=userMapper.findByUsername(mailVo.getSender()).getUserId();
+        result+=mailMapper.insertSendMail(senderId,mailId);
+
+        Long receiverId=userMapper.findByUsername(mailVo.getReceiver()).getUserId();
+        result+=mailMapper.insertSendMail(receiverId,mailId);
+        return result;
     }
 }

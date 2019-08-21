@@ -12,8 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.thymeleaf.expression.Dates;
 
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -38,6 +41,10 @@ public class UserController {
     @RequestMapping("/sentMail")
     @RequiresPermissions("sendMail")
     public String sentMail(MailVo mailVo) {
+        Date date =new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.format(date);
+        mailVo.setSendTime(date);
         mailService.setMail(mailVo);
         return "send-mail-success";
     }
