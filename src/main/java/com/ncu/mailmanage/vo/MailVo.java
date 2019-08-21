@@ -22,6 +22,8 @@ public class MailVo {
 
     private String receiver;
 
+    private Long attrId;
+
 
     public Long getMailId() {
         return mailId;
@@ -69,6 +71,14 @@ public class MailVo {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
+    }
+
+    public Long getAttrId() {
+        return attrId;
+    }
+
+    public void setAttrId(Long attrId) {
+        this.attrId = attrId;
     }
 
     @Override

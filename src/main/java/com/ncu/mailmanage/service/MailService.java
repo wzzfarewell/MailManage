@@ -16,4 +16,6 @@ public interface MailService {
     PageInfo<MailVo> listAll(int pageNum, int pageSize);
 
     PageInfo<MailVo> listByCondition(int pageNum, int pageSize, String title, String sender, String receiver);
+
+    int setMail(MailVo mailVo);
 }
