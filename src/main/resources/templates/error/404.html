@@ -13,22 +13,31 @@
 <body>
 
 <!-- 导航 -->
-<nav class="ui  attached segment my-padded-tb-mini my-shadow-small">
-    <div class="ui container">
-        <div class="ui  secondary stackable menu">
-            <h2 class="ui teal header item">Mail</h2>
-            <a href="#" class=" m-item item my-mobile-hidden"><i class="home icon"></i>首页</a>
-            <a href="write-mail.html" class=" m-item item my-mobile-hidden"><i class="edit icon"></i>写信</a>
-            <a href="inbox.html" class=" m-item item my-mobile-hidden"><i class="inbox icon"></i>收件箱</a>
-            <a href="sent.html" class=" m-item item my-mobile-hidden"><i class="envelope icon"></i>已发送</a>
-            <a href="self.html" class=" m-item item my-mobile-hidden"><i class="user icon"></i>用户中心</a>
+<div class="ui fixed menu">
+    <nav class="ui  attached segment my-padded-tb-mini my-shadow-small">
+        <div class="ui container">
+            <div class="ui  secondary stackable menu">
+                <h2 class="ui teal header item">Mail</h2>
+                <a href="#" th:href="@{/index}" class=" m-item item my-mobile-hidden"><i class="home icon"></i>首页</a>
+                <a href="write-mail.html" th:href="@{/writeMail}" class=" m-item item my-mobile-hidden"><i class="edit icon"></i>写信</a>
+                <a href="inbox.html" th:href="@{/inbox}" class=" m-item item my-mobile-hidden"><i class="inbox icon"></i>收件箱</a>
+                <a href="sent.html" th:href="@{/sent}" class=" m-item item my-mobile-hidden"><i class="envelope icon"></i>已发送</a>
+                <a href="self.html" th:href="@{/self}" class=" m-item item my-mobile-hidden"><i class="user icon"></i>用户中心</a>
 
+            </div>
         </div>
-    </div>
-    <a href="#" class="ui menu toggle icon button my-right-top my-mobile-show">
-        <i class="sidebar icon"></i>
-    </a>
-</nav>
+        <a href="#" class="ui menu toggle icon button my-right-top my-mobile-show">
+            <i class="sidebar icon"></i>
+        </a>
+    </nav>
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
 <div class="my-container my-padded-tb-large">
     <div class="ui container">

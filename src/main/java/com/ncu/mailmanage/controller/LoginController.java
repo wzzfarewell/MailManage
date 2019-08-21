@@ -53,7 +53,12 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String doLogin(String name, String password, Model model){
+    public String doLogin(String name, String password, String valCode, Model model, HttpSession session){
+        LOG.info("登录验证码：\n" + valCode);
+        if(!valCode.toUpperCase().equals(session.getAttribute(Constant.VALIDATE_CODE))) {
+            model.addAttribute("message", "验证码输入错误！");
+            return "login";
+        }
         Subject user = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(name, password);
         try{
@@ -82,8 +87,7 @@ public class LoginController {
     @PostMapping("/register")
     @ResponseBody
     public ServerResponse doRegister(@Valid User user, BindingResult bindingResult, String valCode, HttpSession session){
-        LOG.info("注册用户：\n" + user.toString());
-        LOG.info("验证码：\n" + valCode);
+        LOG.info("注册验证码：\n" + valCode);
         StringBuilder res = new StringBuilder();
         // 参数校验
         if(bindingResult.hasErrors()){
