@@ -167,7 +167,7 @@
     left join t_user u1 on sm.user_id = u1.user_id
     left join t_receiver_mail rm on rm.mail_id = m.mail_id
     left join t_user u2 on rm.user_id = u2.user_id
-    WHERE sm.state_id != 3 and rm.user_id = #{userId,jdbcType=BIGINT}
+    WHERE rm.state_id = 0 and rm.user_id = #{userId,jdbcType=BIGINT}
   </select>
 
   <select id="findSenderByMailId" parameterType="java.lang.Long" resultType="java.lang.String">
@@ -175,4 +175,10 @@
     from t_receiver_mail r left join t_user u on r.user_id = u.user_id
     where r.mail_id = #{mailId,jdbcType=BIGINT}
   </select>
+
+  <update id="updateReceiveMailState" parameterType="java.lang.Long">
+    update t_receiver_mail rm
+    set rm.state_id=#{stateId,jdbcType=SMALLINT}
+    where rm.mail_id=#{mailId,jdbcType=BIGINT}
+  </update>
 </mapper>

@@ -98,4 +98,11 @@ public class MailServiceImpl implements MailService {
         mailVo.setSender(mailMapper.findSenderByMailId(mailId));
         return mailVo;
     }
+
+    @Override
+    public int deleteReceiveMail(Long mailId) {
+        int result=0;
+        result=mailMapper.updateReceiveMailState(mailId,new Long((long)1));
+        return result;
+    }
 }

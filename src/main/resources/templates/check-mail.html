@@ -76,7 +76,7 @@
                 <a th:href="@{/write-mail}" class="ui  teal small button">
                     回复
                 </a>
-                <a class="ui  teal small button">
+                <a th:href="@{/deleteReceiveMail/} + ${mailVo.mailId}" class="ui  teal small button">
                     删除
                 </a>
             </div>
@@ -121,7 +121,7 @@
                 <a th:href="@{/write-mail}" class="ui  teal small button">
                     回复
                 </a>
-                <a class="ui  teal small button">
+                <a th:href="@{/deleteReceiveMail/} + ${mailVo.mailId}" class="ui  teal small button">
                     删除
                 </a>
             </div>

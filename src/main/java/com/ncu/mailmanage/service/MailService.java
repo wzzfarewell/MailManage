@@ -22,4 +22,6 @@ public interface MailService {
     PageInfo<MailVo> listByReceiver(Long userId,int pageNum, int pageSize);
 
     MailVo checkMail(Long mailId);
+
+    int deleteReceiveMail(Long mailId);
 }

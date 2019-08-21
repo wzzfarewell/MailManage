@@ -32,4 +32,6 @@ public interface MailMapper {
     List<MailVo> listByReceiver(Long userId);
 
     String findSenderByMailId(Long mailId);
+
+    int updateReceiveMailState(@Param("mailId")Long mailId,@Param("stateId")Long stateId);
 }
