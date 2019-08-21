@@ -105,7 +105,7 @@
                                         <div class="ui dimmer">
                                             <div class="content">
                                                 <div class="center">
-                                                    <div class="ui inverted button">修改头像</div>
+                                                    <div class="ui inverted button" onclick="updateAvatar();">修改头像</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -114,13 +114,13 @@
                                     <div class="content">
                                         <a class="header"  th:text="${session.user.name}">Team Fu</a>
                                         <div class="meta">
-                                            <span class="date">Created in Sep 2014</span>
+                                            Created in <span class="date" th:text="${session.user.createTime}">Sep 2014</span>
                                         </div>
                                         <div class="meta" th:text="${session.user.position}">
                                             测试工程师
                                         </div>
 
-                                        <div class="description" th:text="${introduction}"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                                        <div class="description" th:text="${session.user.getIntroduction()}"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
                                             这个人很懒什么都没留下...
                                         </font></font></div>
                                     </div>
@@ -159,61 +159,58 @@
             修改个人资料
         </font></font></div>
         <div class="image content">
-            <div class="ui medium image">
-                <img src="../static/img/kristy.png" th:src="@{/img/kristy.png}">
-            </div>
-            <div class="description">
+            <div class="ui grid">
+                <div class="six wide column">
+                    <div class="ui medium image">
+                    <img src="../static/img/kristy.png" th:src="@{/img/kristy.png}">
+                </div>
+                </div>
+                <div class="eight wide column">
+                    <div class="description" style="width: 200%">
 
-                <form class="ui large form" id="updateInfoForm">
-                    <div class="ui stacked segment">
-                        <div class="disabled field">
-                            <label for="">用户名</label>
-                            <input type="text" readonly name="name" placeholder="用户名" th:value="${session.user.getName()}">
-                        </div>
-                        <div class="required field">
-                            <label for="">邮件地址（只能是@mail.com为后缀的地址）</label>
-                            <input type="email" name="mailAddress" placeholder="@mail.com" th:value="${session.user.getMailAddress()}">
-                        </div>
-                        <div class="inline fields">
-                            <label for="gender">性别</label><br/>
-                            <div class="ui selection dropdown">
-                                <input type="hidden" name="gender" th:value="${session.user.getGender()}">
-                                <i class="dropdown icon"></i>
-                                <div class="default text">Gender</div>
-                                <div class="menu">
-                                    <div class="item" data-value="1">男</div>
-                                    <div class="item" data-value="0">女</div>
+                    <form class="ui large form" id="updateInfoForm">
+                        <div class="ui stacked segment">
+                            <div class="disabled field">
+                                <label for="">用户名</label>
+                                <input type="text" readonly name="name" placeholder="用户名" th:value="${session.user.getName()}">
+                            </div>
+                            <div class="required field">
+                                <label for="">邮件地址（只能是@mail.com为后缀的地址）</label>
+                                <input type="email" name="mailAddress" placeholder="@mail.com" th:value="${session.user.getMailAddress()}">
+                            </div>
+
+                            <div class="field">
+                                <label for="">出生日期</label>
+                                <div class="ui calendar" id="date">
+                                    <div class="ui input left icon">
+                                        <i class="calendar icon"></i>
+                                        <input type="text" name="birthday" placeholder="Date" value="1998-01-01" th:value="${session.user.getBirthday()}">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="field">
-                            <label for="">出生日期</label>
-                            <div class="ui calendar" id="date">
-                                <div class="ui input left icon">
-                                    <i class="calendar icon"></i>
-                                    <input type="text" name="birthday" placeholder="Date" value="1998-01-01" th:value="${session.user.getBirthday()}">
-                                </div>
+                            <div class="field">
+                                <label for="">职务</label>
+                                <input type="text" name="position" placeholder="Java工程师" th:value="${session.user.getPosition()}">
                             </div>
-                        </div>
-                        <div class="field">
-                            <label for="">职务</label>
-                            <input type="text" name="position" placeholder="Java工程师" th:value="${session.user.getPosition()}">
-                        </div>
-                        <div class=" field">
-                            <label for="">简介</label>
-                            <textarea name="introduction" id="introduction" th:text="${introduction}" >这个人很懒，什么都没留下...</textarea>
-                        </div>
+                            <div class=" field">
+                                <label for="">简介</label>
+                                <textarea name="introduction" id="introduction" th:text="${session.user.getIntroduction()}" >这个人很懒，什么都没留下...</textarea>
+                            </div>
 
-                        <div>
-                            <ol class="ui list" id="msg">
+                            <div>
+                                <ol class="ui list" id="msg">
 
-                            </ol>
+                                </ol>
+                            </div>
+
                         </div>
 
-                    </div>
+                        <div class="ui error message"></div>
+                    </form>
 
-                    <div class="ui error message"></div>
-                </form>
+                </div>
+                </div>
+
 
             </div>
         </div>
@@ -223,6 +220,38 @@
             </font></font></div>
             <div class="ui positive right labeled icon button" onclick="loadData();"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
                 提交
+            </font></font><i class="checkmark icon"></i>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="ui modal" id="updateAvatar">
+        <i class="close icon"></i>
+        <div class="header"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+            修改头像
+        </font></font></div>
+        <div class="image content">
+            <div class="ui medium image">
+                <img src="../static/img/kristy.png" th:src="@{/img/kristy.png}">
+            </div>
+            <div class="description">
+                <div class="ui small images">
+                    <img class="ui image" src="../static/img/kristy.png" th:src="@{/img/kristy.png}">
+                    <img class="ui image" src="../static/img/daniel.png" th:src="@{/img/daniel.png}">
+                    <img class="ui image" src="../static/img/elyse.png" th:src="@{/img/elyse.png}"><br/>
+                    <img class="ui image" src="../static/img/matthew.png" th:src="@{/img/matthew.png}">
+                    <img class="ui image" src="../static/img/molly.png" th:src="@{/img/molly.png}">
+                    <img class="ui image" src="../static/img/steve.png" th:src="@{/img/steve.png}">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui black deny button"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                算了
+            </font></font></div>
+            <div class="ui positive right labeled icon button"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                选好了
             </font></font><i class="checkmark icon"></i>
             </div>
         </div>
@@ -316,6 +345,12 @@
             ;
         }
 
+        function updateAvatar() {
+            $('#updateAvatar')
+                .modal('show')
+            ;
+        }
+
         $('#updatePwdForm')
             .form({
 
@@ -341,7 +376,7 @@
                                 prompt : '新密码长度不能少于6位'
                             },
                             {
-                                type   : 'match[oldpwd]',
+                                type   : 'different[oldpwd]',
                                 prompt : '新旧密码不能一致'
                             }
                         ]
@@ -375,30 +410,24 @@
 
         function loadData() {
             var formData = {
-                'name' : $("input[name='name']").val(),
                 'mailAddress' : $("input[name='mailAddress']").val(),
-                'gender' : $("input[name='gender']:checked").val(),
                 'birthday' : $("input[name='birthday']").val(),
                 'position' : $("input[name='position']").val(),
-                'introduction' : $("#introduction").val(),
+                'introduction' : $("#introduction").val()
             };
             console.log(formData);
             $.ajax({
                 type: 'POST',
                 data: formData,
-                // contentType: 'application/json',
+
                 dataType: 'json',
-                url: /*[[@{/register}]]*/"",
+                url: 'self/updateInfo',
                 success: function(json) {
                     console.log(json);
                     if(json.success === true){
-                        window.location = /*[[@{/registerSuccess}]]*/'registerSuccess';
+                        alert("修改成功");
                     }else{
-                        $("#msg").empty();
-                        var lst = json.msg.split(";");
-                        $.each(lst, function (idx, msg) {
-                            $("#msg").append("<li value=\"*\">" + msg + "</li>");
-                        });
+                        alert("修改失败");
                     }
                 },
                 error: function(xmlHttpRequest, textStatus, errorThrown){

@@ -1024,13 +1024,13 @@
     },
 
     text: {
-      days: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
-      months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      today: 'Today',
-      now: 'Now',
-      am: 'AM',
-      pm: 'PM'
+      days: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+      months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+      monthsShort: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+      today: '今天',
+      now: '现在',
+      am: '上午',
+      pm: '下午'
     },
 
     formatter: {

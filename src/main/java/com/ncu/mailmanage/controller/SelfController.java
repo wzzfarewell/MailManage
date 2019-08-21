@@ -1,6 +1,8 @@
 package com.ncu.mailmanage.controller;
 
 import com.ncu.mailmanage.global.Constant;
+import com.ncu.mailmanage.global.ResponseCode;
+import com.ncu.mailmanage.global.ServerResponse;
 import com.ncu.mailmanage.pojo.User;
 import com.ncu.mailmanage.service.UserService;
 import com.ncu.mailmanage.utils.PasswordUtil;
@@ -8,11 +10,18 @@ import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * IndexController
@@ -30,9 +39,9 @@ public class SelfController {
     private UserService userService;
 
     @GetMapping("")
-    public String self(Model model,HttpSession session){
+    public String self(HttpSession session){
         User user=(User)session.getAttribute(Constant.CURRENT_USER);
-        model.addAttribute("introduction",userService.findIntroductionByUserId(user.getUserId()));
+
         return "self";
     }
 
@@ -50,6 +59,27 @@ public class SelfController {
         }
         model.addAttribute("message","密码错误,修改失败");
         return "self";
+
+    }
+
+    @PostMapping("/updateInfo")
+    @ResponseBody
+    public ServerResponse doRegister(User info, HttpSession session){
+        User user=(User)session.getAttribute(Constant.CURRENT_USER);
+
+        user.setMailAddress(info.getMailAddress());
+        user.setBirthday(info.getBirthday());
+        user.setPosition(info.getPosition());
+        user.setIntroduction(info.getIntroduction());
+        LOG.info("修改用户信息：\n" + user.toString());
+
+        return userService.updateByUserId(user);
+    }
+
+    @InitBinder
+    public void initBinder(ServletRequestDataBinder binder){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 
     }
 }

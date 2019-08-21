@@ -1,6 +1,9 @@
 package com.ncu.mailmanage.dao;
 
 import com.ncu.mailmanage.pojo.User;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface UserMapper {
     int deleteByPrimaryKey(Long userId);
@@ -22,4 +25,8 @@ public interface UserMapper {
     String findIntroductionByUserId(Long userId);
 
     User findByMailAddress(String mailAddress);
+
+    List<User> listByNotLocked();
+
+    List<User> listByConditionAndNotLocked(@Param("name") String name, @Param("mailAddress") String mailAddress);
 }

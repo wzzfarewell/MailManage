@@ -1,5 +1,7 @@
 package com.ncu.mailmanage.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ncu.mailmanage.dao.PermissionMapper;
 import com.ncu.mailmanage.dao.UserMapper;
 import com.ncu.mailmanage.global.ResponseCode;
@@ -7,9 +9,11 @@ import com.ncu.mailmanage.global.ServerResponse;
 import com.ncu.mailmanage.pojo.User;
 import com.ncu.mailmanage.service.UserService;
 import com.ncu.mailmanage.utils.PasswordUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -70,5 +74,45 @@ public class UserServiceImpl implements UserService {
             return ServerResponse.createBySuccessMessage("注册成功");
         }
         return ServerResponse.createByErrorMessage("注册失败");
+    }
+
+    @Override
+    public PageInfo<User> listNotLocked(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<User> users = userMapper.listByNotLocked();
+        return new PageInfo<>(users);
+    }
+
+    @Override
+    public int lockUserById(Long userId) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        user.setLocked(true);
+        user.setUpdateTime(new Date());
+        return userMapper.updateByPrimaryKey(user);
+    }
+
+    @Override
+    public PageInfo<User> searchByCondition(int pageNum, int pageSize, String name, String mailAddress) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<User> users = new ArrayList<>();
+        if(StringUtils.isNotBlank(name) && StringUtils.isNotBlank(mailAddress)){
+            users = userMapper.listByConditionAndNotLocked("%" + name + "%", mailAddress);
+        }else if(StringUtils.isBlank(name) && StringUtils.isNotBlank(mailAddress)){
+            users = userMapper.listByConditionAndNotLocked(null, mailAddress);
+        }else if(StringUtils.isNotBlank(name) && StringUtils.isBlank(mailAddress)){
+            users = userMapper.listByConditionAndNotLocked("%" + name + "%", null);
+        }else{
+            users = userMapper.listByConditionAndNotLocked(null, null);
+        }
+        return new PageInfo<>(users);
+    }
+
+    @Override
+    public ServerResponse updateByUserId(User user) {
+        int resultCount=userMapper.updateByPrimaryKeyWithBLOBs(user);
+        if(resultCount > 0){
+            return ServerResponse.createBySuccessMessage("修改成功");
+        }
+        return ServerResponse.createByErrorMessage("修改失败");
     }
 }

@@ -1,5 +1,6 @@
 package com.ncu.mailmanage.service;
 
+import com.github.pagehelper.PageInfo;
 import com.ncu.mailmanage.global.ServerResponse;
 import com.ncu.mailmanage.pojo.User;
 
@@ -22,4 +23,12 @@ public interface UserService {
     int updatePassword(User user);
 
     ServerResponse register(User user);
+
+    PageInfo<User> listNotLocked(int pageNum, int pageSize);
+
+    int lockUserById(Long userId);
+
+    PageInfo<User> searchByCondition(int pageNum, int pageSize, String name, String mailAddress);
+
+    ServerResponse updateByUserId(User user);
 }

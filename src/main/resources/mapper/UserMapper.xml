@@ -16,20 +16,18 @@
     <result column="update_time" property="updateTime"/>
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.ncu.mailmanage.pojo.User" >
-    <constructor >
-      <idArg column="user_id" jdbcType="BIGINT" javaType="java.lang.Long" />
-      <arg column="birthday" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="gender" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="mail_address" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="position" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="avatar" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="password" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="locked" jdbcType="BIT" javaType="java.lang.Boolean" />
-      <arg column="introduction" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
-    </constructor>
+    <id column="user_id" property="userId"/>
+    <result column="name" property="name"/>
+    <result column="password" property="password"/>
+    <result column="gender" property="gender"/>
+    <result column="birthday" property="birthday"/>
+    <result column="mail_address" property="mailAddress"/>
+    <result column="position" property="position"/>
+    <result column="introduction" property="introduction"/>
+    <result column="avatar" property="avatar"/>
+    <result column="locked" property="locked"/>
+    <result column="create_time" property="createTime"/>
+    <result column="update_time" property="updateTime"/>
   </resultMap>
   <sql id="Base_Column_List" >
     user_id, birthday, create_time, gender, mail_address, `name`, `position`, update_time,
@@ -210,14 +208,37 @@
     where user_id = #{userId,jdbcType=BIGINT}
   </update>
   
-  <select id="findByUsername" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/>
+  <select id="findByUsername" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List"/>,
+    <include refid="Blob_Column_List"/>
     from t_user where t_user.name = #{username}
   </select>
 
-  <select id="findByMailAddress" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List"/>
+  <select id="findByMailAddress" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List"/>,
+    <include refid="Blob_Column_List"/>
     from t_user where t_user.mail_address = #{mailAddress}
+  </select>
+
+  <select id="listByNotLocked" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from t_user where t_user.locked = false
+  </select>
+
+  <select id="listByConditionAndNotLocked" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from t_user
+    <where>
+      <if test="name != null">
+        `name` like #{name}
+      </if>
+      <if test="mailAddress != null">
+        and mail_address = #{mailAddress}
+      </if>
+      and locked = false
+    </where>
   </select>
 
   <select id="findIntroductionByUserId" resultType="String">

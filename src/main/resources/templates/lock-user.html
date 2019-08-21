@@ -12,118 +12,164 @@
 
 <body>
 
-    <!-- 导航 -->
-    <nav th:replace="_framents :: menu(7)" class="ui  attached segment my-padded-tb-mini my-shadow-small">
-        <div class="ui container">
-            <div class="ui  secondary stackable menu">
-                <h2 class="ui teal header item">Mail</h2>
-                <a href="#" class=" m-item item my-mobile-hidden"><i class="home icon"></i>首页</a>
-                <a href="write-mail.html" class=" m-item item my-mobile-hidden"><i class="edit icon"></i>写信</a>
-                <a href="inbox.html" class=" m-item item my-mobile-hidden"><i class="inbox icon"></i>收件箱</a>
-                <a href="sent.html" class=" m-item item my-mobile-hidden"><i class="envelope icon"></i>已发送</a>
-                <a href="self.html" class=" m-item item my-mobile-hidden"><i class="user icon"></i>用户中心</a>
-                <a href="delete-mail.html" shiro:hasPermission="deleteMail" th:href="@{/deleteMail}"
-                    class=" m-item item my-mobile-hidden"><i class="delete icon"></i>删除非法邮件</a>
-                <a href="lock-user.html" shiro:hasPermission="lockUser" th:href="@{/lockUser}"
-                    class=" m-item item my-mobile-hidden"><i class="lock icon"></i>锁定非法用户</a>
+<!-- 导航 -->
+<nav th:replace="_framents :: menu(7)" class="ui  attached segment my-padded-tb-mini my-shadow-small">
+    <div class="ui container">
+        <div class="ui  secondary stackable menu">
+            <h2 class="ui teal header item">Mail</h2>
+            <a href="#" class=" m-item item my-mobile-hidden"><i class="home icon"></i>首页</a>
+            <a href="write-mail.html" class=" m-item item my-mobile-hidden"><i class="edit icon"></i>写信</a>
+            <a href="inbox.html" class=" m-item item my-mobile-hidden"><i class="inbox icon"></i>收件箱</a>
+            <a href="sent.html" class=" m-item item my-mobile-hidden"><i class="envelope icon"></i>已发送</a>
+            <a href="self.html" class=" m-item item my-mobile-hidden"><i class="user icon"></i>用户中心</a>
+            <a href="delete-mail.html" shiro:hasPermission="deleteMail" th:href="@{/deleteMail}"
+               class=" m-item item my-mobile-hidden"><i class="delete icon"></i>删除非法邮件</a>
+            <a href="lock-user.html" shiro:hasPermission="lockUser" th:href="@{/lockUser}"
+               class=" m-item item my-mobile-hidden"><i class="lock icon"></i>锁定非法用户</a>
 
-                <div class="right m-item item my-mobile-hidden menu">
-                    <div class="ui dropdown item">
-                        <div class="text">
-                            <img class="ui avatar image" src="https://picsum.photos/id/1000/100/100">
-                            <span th:text="${user.name}">farewell</span>
-                        </div>
-                        <i class="dropdown icon"></i>
-                        <div class="menu">
-                            <a href="/logout" class="item"><i class="sign-out icon"></i>登出</a>
-                        </div>
+            <div class="right m-item item my-mobile-hidden menu">
+                <div class="ui dropdown item">
+                    <div class="text">
+                        <img class="ui avatar image" src="https://picsum.photos/id/1000/100/100">
+                        <span>farewell</span>
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a href="/logout" class="item"><i class="sign-out icon"></i>登出</a>
                     </div>
                 </div>
             </div>
         </div>
-        <a href="#" class="ui menu toggle icon button my-right-top my-mobile-show">
-            <i class="sidebar icon"></i>
-        </a>
-    </nav>
+    </div>
+    <a href="#" class="ui menu toggle icon button my-right-top my-mobile-show">
+        <i class="sidebar icon"></i>
+    </a>
+</nav>
 
-    <div class="my-container my-padded-tb-large">
-        <div class="ui container">
-            <form action="#" method="POST" class="ui segment form">
-                <div class="inline fields">
-                    <div class="field">
-                        <input type="text" name="username" placeholder="用户名" class="">
-                    </div>
-                    <div class="field">
-                        <input type="text" name="mailAddress" placeholder="邮箱地址">
-                    </div>
-                    <div class="field">
-                        <button class="ui teal mini button">
-                            <i class="search icon"></i>
-                            搜索
-                        </button>
-                    </div>
+<div class="my-container my-padded-tb-large">
+    <div class="ui container">
+        <form  method="POST" class="ui segment form">
+            <input type="hidden" name="pageNum"/>
+            <div class="inline fields">
+                <div class="field">
+                    <input type="text" name="username" placeholder="用户名" class="">
                 </div>
-            </form>
-            <table class="ui celled table">
+                <div class="field">
+                    <input type="text" name="mailAddress" placeholder="邮箱地址">
+                </div>
+                <div class="field">
+                    <a id="search-btn" onclick="page(this)" th:attr="data-page=1" class="ui teal mini button">
+                        <i class="search icon"></i>
+                        搜索
+                    </a>
+                </div>
+            </div>
+        </form>
+        <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
+            <i class="close icon"></i>
+            <div class="header">提示：</div>
+            <p th:text="${message}">恭喜，操作成功！</p>
+        </div>
+        <div id="table-container">
+            <table th:fragment="userList" class="ui celled table">
                 <thead>
-                    <tr>
-                        <th></th>
-                        <th>头像</th>
-                        <th>用户名</th>
-                        <th>邮箱地址</th>
-                        <th>职位</th>
-                        <th>注册时间</th>
-                        <th>操作</th>
-                    </tr>
+                <tr>
+                    <th></th>
+                    <th>头像</th>
+                    <th>用户名</th>
+                    <th>邮箱地址</th>
+                    <th>职位</th>
+                    <th>注册时间</th>
+                    <th>操作</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td><img class="ui avatar image" src="https://picsum.photos/id/1000/100/100"></td>
-                        <td>小白</td>
-                        <td>farewell@mail.com</td>
-                        <td>Java工程师</td>
-                        <td>2019-8-19</td>
-                        <td>
-                            <a href="#" class="ui basic mini red button">锁定</a>
-                        </td>
-                    </tr>
+                <tr th:each="user, idx : ${page.list}">
+                    <td th:text="${idx.count}">1</td>
+                    <td><img class="ui avatar image" src="https://picsum.photos/id/1000/100/100"></td>
+                    <td th:text="${user.name}">小白</td>
+                    <td th:text="${user.mailAddress}">farewell@mail.com</td>
+                    <td th:text="${user.position}">Java工程师</td>
+                    <td th:text="${#dates.format(user.createTime, 'yyyy-MM-dd HH:mm:ss')}">2019-8-19</td>
+                    <td>
+                        <a th:unless="${user.name == session.user.name}" th:href="@{/lockUser/} + ${user.userId}" href="#" class="ui basic mini red button">锁定</a>
+                    </td>
+                </tr>
+                <!--/*-->
+                <tr>
+                    <td>1</td>
+                    <td><img class="ui avatar image" src="https://picsum.photos/id/1000/100/100"></td>
+                    <td>小白</td>
+                    <td>farewell@mail.com</td>
+                    <td>Java工程师</td>
+                    <td>2019-8-19</td>
+                    <td>
+                        <a href="#" class="ui basic mini red button">锁定</a>
+                    </td>
+                </tr>
+                <!--*/-->
                 </tbody>
                 <tfoot>
-                    <tr>
-                        <th colspan="7">
-                            <div class="ui mini left floated pagination menu">
-                                <a class="item">
-                                    上一页
-                                </a>
-                                <a class="item">
-                                    下一页
-                                </a>
-                            </div>
-                        </th>
-                    </tr>
+                <tr>
+                    <th colspan="7">
+                        <div class="ui mini left floated pagination menu">
+                            <a class="item" onclick="page(this)" th:attr="data-page=${page.pageNum - 1}" th:unless="${page.isFirstPage}">
+                                上一页
+                            </a>
+                            <a class="item" onclick="page(this)" th:attr="data-page=${page.pageNum + 1}" th:unless="${page.isLastPage}">
+                                下一页
+                            </a>
+                        </div>
+                    </th>
+                </tr>
                 </tfoot>
             </table>
         </div>
     </div>
+</div>
 
 
-    <!-- 底部 -->
-    <footer class="ui segment my-padded-tb-large">
-        <div class="ui center aligned container">
-            <div class="ui  section divider"></div>
-            <p class="my-opacity-mini">Copyright © 2019 Designed by farewell</p>
-        </div>
-    </footer>
+<!-- 底部 -->
+<footer class="ui segment my-padded-tb-large">
+    <div class="ui center aligned container">
+        <div class="ui  section divider"></div>
+        <p class="my-opacity-mini">Copyright © 2019 Designed by farewell</p>
+    </div>
+</footer>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-    <script>
-        $('.menu.toggle').click(function () {
-            $('.m-item ').toggleClass('my-mobile-hidden');
-        });
-    </script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+<script th:inline="javascript">
+    $('.menu.toggle').click(function () {
+        $('.m-item ').toggleClass('my-mobile-hidden');
+    });
+    //消息提示关闭初始化
+    $('.message .close').on('click', function () {
+        $(this)
+            .closest('.message')
+            .transition('fade');
+    });
+
+    function page(obj) {
+        console.log($(obj).data("page"));
+        $("[name='pageNum']").val($(obj).data("page"));
+        loadUserTable();
+    }
+    
+    function loadUserTable() {
+        /*<![CDATA[*/
+        var url= /*[[@{/lockUser/search}]]*/"lockUser/search";
+        /*]]>*/
+        $("#table-container").load(url,
+            {
+                'name' : $("[name='username']").val(),
+                'mailAddress' : $("[name='mailAddress']").val(),
+                'pageNum' : $("[name='pageNum']").val()
+            }
+        );
+    }
+</script>
 </body>
 
 </html>
