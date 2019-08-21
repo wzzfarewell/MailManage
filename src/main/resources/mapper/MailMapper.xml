@@ -50,7 +50,7 @@
     values (#{mailId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{sendTime,jdbcType=TIMESTAMP}, 
       #{body,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.ncu.mailmanage.pojo.Mail" >
+  <insert id="insertSelective" parameterType="com.ncu.mailmanage.pojo.Mail" keyProperty="mailId" useGeneratedKeys="true">
     insert into t_mail
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="mailId != null" >
@@ -146,14 +146,14 @@
   </select>
 
   <insert id="insertSendMail" parameterType="java.lang.Long">
-    insert into t_sender_mail ( user_Id,mail_Id,state_id
+    insert into t_sender_mail ( user_id,mail_id,state_id
       )
-    values (#{userId,jdbcType=BIGINT}, #{mailId,jdbcType=BIGINT},0
+    values (#{userId,jdbcType=BIGINT}, #{mailId,jdbcType=BIGINT}, 0
       )
   </insert>
 
   <insert id="insertReceiveMail" parameterType="java.lang.Long">
-    insert into t_receiver_mail ( user_Id,mail_Id,read_flag,state_id
+    insert into t_receiver_mail ( user_id,mail_id,read_flag,state_id
       )
     values (#{userId,jdbcType=BIGINT}, #{mailId,jdbcType=BIGINT},0,0
       )

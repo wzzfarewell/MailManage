@@ -13,9 +13,9 @@ public interface MailMapper {
 
     int insertSelective(Mail record);
 
-    int insertSendMail(@Param(value = "userId")Long userId,@Param(value = "maildId")Long maildId);
+    int insertSendMail(@Param(value = "userId")Long userId,@Param(value = "mailId")Long mailId);
 
-    int insertReceiveMail(@Param(value = "userId")Long userId,@Param(value = "maildId")Long maildId);
+    int insertReceiveMail(@Param(value = "userId")Long userId,@Param(value = "mailId")Long mailId);
 
     Mail selectByPrimaryKey(Long mailId);
 

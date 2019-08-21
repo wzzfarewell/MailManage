@@ -71,13 +71,12 @@ public class MailServiceImpl implements MailService {
         mail.setSendTime(mailVo.getSendTime());
         result=mailMapper.insertSelective(mail);
 
-        System.out.println(mailVo.getSender());
         Long mailId=mail.getMailId();
         Long senderId=userMapper.findByUsername(mailVo.getSender()).getUserId();
         result+=mailMapper.insertSendMail(senderId,mailId);
 
         Long receiverId=userMapper.findByUsername(mailVo.getReceiver()).getUserId();
-        result+=mailMapper.insertSendMail(receiverId,mailId);
+        result+=mailMapper.insertReceiveMail(receiverId,mailId);
         return result;
     }
 }
