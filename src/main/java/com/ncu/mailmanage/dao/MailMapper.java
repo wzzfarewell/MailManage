@@ -28,4 +28,8 @@ public interface MailMapper {
     List<MailVo> listAll();
 
     List<MailVo> listByCondition(@Param("title") String title, @Param("sender") String sender, @Param("receiver") String receiver);
+
+    List<MailVo> listByReceiver(Long userId);
+
+    String findSenderByMailId(Long mailId);
 }
