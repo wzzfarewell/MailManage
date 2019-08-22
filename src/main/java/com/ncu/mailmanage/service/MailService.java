@@ -22,4 +22,12 @@ public interface MailService {
     int setMail(MailVo mailVo);
 
     PageInfo<MailVo> listSentMail(String name, int pageNum, int pageSize);
+
+    PageInfo<MailVo> listByReceiver(Long userId,int pageNum, int pageSize);
+
+    MailVo checkMail(Long mailId);
+
+    int deleteReceiveMail(Long mailId);
+
+    int deleteSentMail(Long mailId);
 }

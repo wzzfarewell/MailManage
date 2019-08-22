@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ncu.mailmanage.dao.PermissionMapper;
 import com.ncu.mailmanage.dao.UserMapper;
+import com.ncu.mailmanage.global.Constant;
 import com.ncu.mailmanage.global.ResponseCode;
 import com.ncu.mailmanage.global.ServerResponse;
 import com.ncu.mailmanage.pojo.User;
@@ -72,7 +73,10 @@ public class UserServiceImpl implements UserService {
         user.setLocked(false);
         int resultCount = userMapper.insert(user);
         if(resultCount > 0){
-            return ServerResponse.createBySuccessMessage("注册成功");
+            int rowCount = userMapper.insertUserRole(user.getUserId(), Constant.REGISTER_ID);
+            if(rowCount > 0){
+                return ServerResponse.createBySuccessMessage("注册成功");
+            }
         }
         return ServerResponse.createByErrorMessage("注册失败");
     }

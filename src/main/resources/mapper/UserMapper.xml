@@ -9,7 +9,6 @@
     <result column="birthday" property="birthday"/>
     <result column="mail_address" property="mailAddress"/>
     <result column="position" property="position"/>
-    <result column="introduction" property="introduction"/>
     <result column="avatar" property="avatar"/>
     <result column="locked" property="locked"/>
     <result column="create_time" property="createTime"/>
@@ -48,7 +47,7 @@
     delete from t_user
     where user_id = #{userId,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.ncu.mailmanage.pojo.User"  >
+  <insert id="insert" parameterType="com.ncu.mailmanage.pojo.User" useGeneratedKeys="true" keyProperty="userId" >
     insert into t_user (user_id, birthday, create_time, 
       gender, mail_address, name, 
       position, update_time, avatar, 
@@ -214,7 +213,7 @@
     <include refid="Blob_Column_List"/>
     from t_user where t_user.name = #{username}
   </select>
-
+  
   <select id="findByMailAddress" resultMap="ResultMapWithBLOBs">
     select
     <include refid="Base_Column_List"/>,
@@ -245,5 +244,10 @@
     select <include refid="Blob_Column_List"/>
     from t_user where t_user.user_id = #{userId,jdbcType=BIGINT}
   </select>
+
+
+  <insert id="insertUserRole">
+    insert into t_user_role (user_id, role_id) values (#{userId}, #{roleId});
+  </insert>
 
 </mapper>

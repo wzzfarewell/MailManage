@@ -72,13 +72,45 @@ public class MailServiceImpl implements MailService {
         mail.setSendTime(mailVo.getSendTime());
         result=mailMapper.insertSelective(mail);
 
-        System.out.println(mailVo.getSender());
         Long mailId=mail.getMailId();
         Long senderId=userMapper.findByUsername(mailVo.getSender()).getUserId();
         result+=mailMapper.insertSendMail(senderId,mailId);
 
         Long receiverId=userMapper.findByUsername(mailVo.getReceiver()).getUserId();
-        result+=mailMapper.insertSendMail(receiverId,mailId);
+        result+=mailMapper.insertReceiveMail(receiverId,mailId);
+        return result;
+    }
+
+    @Override
+    public PageInfo<MailVo> listByReceiver(Long userId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<MailVo> mailVos = mailMapper.listByReceiver(userId);
+        return new PageInfo<>(mailVos);
+    }
+
+    @Override
+    public MailVo checkMail(Long mailId) {
+        MailVo mailVo=new MailVo();
+        Mail mail=mailMapper.selectByPrimaryKey(mailId);
+        mailVo.setMailId(mailId);
+        mailVo.setTitle(mail.getTitle());
+        mailVo.setBody(mail.getBody());
+        mailVo.setSendTime(mail.getSendTime());
+        mailVo.setSender(mailMapper.findSenderByMailId(mailId));
+        return mailVo;
+    }
+
+    @Override
+    public int deleteReceiveMail(Long mailId) {
+        int result=0;
+        result=mailMapper.updateReceiveMailState(mailId,new Long((long)1));
+        return result;
+    }
+
+    @Override
+    public int deleteSentMail(Long mailId) {
+        int result=0;
+        result=mailMapper.updateSentMailState(mailId,new Long((long)1));
         return result;
     }
 

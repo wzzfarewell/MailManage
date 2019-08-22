@@ -33,7 +33,7 @@
                     <div class="ui dropdown item">
                         <div class="text">
                             <img class="ui avatar image" src="https://picsum.photos/id/1000/100/100">
-                            <span th:text="${user.name}">farewell</span>
+                            <span th:text="${session.user.name}">farewell</span>
                         </div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
@@ -77,18 +77,34 @@
                                 <th>发件人</th>
                                 <th>主题</th>
                                 <th>时间</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr th:each="mail : ${page.list}">
                                 <td>
                                     <input type="checkbox">
                                 </td>
-                                <td>小白</td>
-                                <td>这是一封给farewell的邮件</td>
-                                <td>2019-8-19</td>
+                                <td th:text="${mail.sender}">小白</td>
+                                <td th:text="${mail.title}">这是一封给farewell的邮件</td>
+                                <td th:text="${#dates.format(mail.sendTime, 'yyyy-MM-dd HH:mm:ss')}">2019-8-19</td>
+                                <td><a th:href="@{/checkMail/} + ${mail.mailId}" class="ui  teal small button">查看</a></td>
                             </tr>
                         </tbody>
+                        <tfoot>
+                        <tr>
+                            <th colspan="6">
+                                <div class="ui mini left floated pagination menu">
+                                    <a class="item" onclick="page(this)" th:attr="data-page=${page.pageNum - 1}" th:unless="${page.isFirstPage}">
+                                        上一页
+                                    </a>
+                                    <a class="item" onclick="page(this)" th:attr="data-page=${page.pageNum + 1}" th:unless="${page.isLastPage}">
+                                        下一页
+                                    </a>
+                                </div>
+                            </th>
+                        </tr>
+                        </tfoot>
                     </table>
                 </div>
                 

@@ -3,6 +3,7 @@ package com.ncu.mailmanage.controller;
 import com.ncu.mailmanage.global.Constant;
 import com.ncu.mailmanage.pojo.User;
 import com.ncu.mailmanage.service.MailService;
+import com.ncu.mailmanage.vo.MailVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.net.URLDecoder;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/sent")
@@ -34,14 +36,28 @@ public class sentController {
         return "sent";
     }
 
-    @PostMapping("/deleteSentMail")
-    @ResponseBody
-    public void deleteSentMail(String[] list){
-        for (int i=0;i<list.length;i++) {
-            System.out.println(list[i]);
-        }
+    @GetMapping("/checkSentMail/{mailId}")
+    public String checkMail(@PathVariable Long mailId,
+                            Model model){
+        MailVo mailVo = mailService.checkMail(mailId);
+        model.addAttribute("mailVo",mailVo);
+        return "check-sent-mail";
+    }
 
-        return ;
+    @RequestMapping("/deleteSentMail/{mailId}")
+    public String deleteSentMail(@PathVariable Long mailId) {
+        mailService.deleteSentMail(mailId);
+        return "redirect:/sent";
+    }
+
+    @RequestMapping("/deleteSentMails")
+    @ResponseBody
+    public String deleteSentMails(@RequestBody Map<String, Object> paramsMap) {
+        String[] arr = (String[])paramsMap.get("list");
+
+        System.out.println(arr.length);
+
+        return null;
     }
 
 }
