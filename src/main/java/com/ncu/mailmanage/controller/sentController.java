@@ -28,7 +28,7 @@ public class sentController {
 
     @GetMapping("")
     public String sent(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
-                       @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+                       @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
                        HttpSession session,
                        Model model){
         User user = (User)session.getAttribute(Constant.CURRENT_USER);
