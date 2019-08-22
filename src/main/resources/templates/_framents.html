@@ -13,7 +13,7 @@
         <div class="ui  secondary stackable menu">
             <h2 class="ui teal header item">Mail</h2>
             <a href="index.html" th:href="@{/index}" class=" m-item item my-mobile-hidden" th:classappend="${n==1} ? 'active'"><i class="home icon"></i>首页</a>
-            <a href="write-mail.html" class=" m-item item my-mobile-hidden" th:classappend="${n==2} ? 'active'"><i class="edit icon"></i>写信</a>
+            <a href="#" th:href="@{/write-mail}" class=" m-item item my-mobile-hidden" th:classappend="${n==2} ? 'active'"><i class="edit icon"></i>写信</a>
             <a href="inbox.html" class=" m-item item my-mobile-hidden" th:classappend="${n==3} ? 'active'"><i class="inbox icon"></i>收件箱</a>
             <a href="sent.html" th:href="@{/sent}" class=" m-item item my-mobile-hidden" th:classappend="${n==4} ? 'active'"><i class="envelope icon"></i>已发送</a>
             <a href="self.html" th:href="@{/self}" class=" m-item item my-mobile-hidden" th:classappend="${n==5} ? 'active'"><i class="user icon"></i>用户中心</a>

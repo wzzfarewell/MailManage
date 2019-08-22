@@ -3,7 +3,9 @@ package com.ncu.mailmanage.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ncu.mailmanage.dao.MailMapper;
+import com.ncu.mailmanage.dao.UserMapper;
 import com.ncu.mailmanage.pojo.Mail;
+import com.ncu.mailmanage.pojo.User;
 import com.ncu.mailmanage.service.MailService;
 import com.ncu.mailmanage.vo.MailVo;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +24,8 @@ import java.util.List;
 public class MailServiceImpl implements MailService {
     @Autowired
     private MailMapper mailMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public int deleteMailById(Long id) {
@@ -57,5 +61,32 @@ public class MailServiceImpl implements MailService {
             mailVos = mailMapper.listByCondition( null, null, null);
         }
         return new PageInfo<>(mailVos);
+    }
+
+    @Override
+    public int setMail(MailVo mailVo) {
+        int result=0;
+        Mail mail=new Mail();
+        mail.setTitle(mailVo.getTitle());
+        mail.setBody(mailVo.getBody());
+        mail.setSendTime(mailVo.getSendTime());
+        result=mailMapper.insertSelective(mail);
+
+        System.out.println(mailVo.getSender());
+        Long mailId=mail.getMailId();
+        Long senderId=userMapper.findByUsername(mailVo.getSender()).getUserId();
+        result+=mailMapper.insertSendMail(senderId,mailId);
+
+        Long receiverId=userMapper.findByUsername(mailVo.getReceiver()).getUserId();
+        result+=mailMapper.insertSendMail(receiverId,mailId);
+        return result;
+    }
+
+    @Override
+    public PageInfo<MailVo> listSentMail(String name, int pageNum, int pageSize) {
+
+        PageHelper.startPage(pageNum, pageSize);
+        List<MailVo> mail = mailMapper.listMail(name,0);
+        return new PageInfo<>(mail);
     }
 }

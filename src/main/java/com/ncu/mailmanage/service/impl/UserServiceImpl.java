@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -115,5 +116,20 @@ public class UserServiceImpl implements UserService {
             return ServerResponse.createBySuccessMessage("修改成功");
         }
         return ServerResponse.createByErrorMessage("修改失败");
+    }
+
+    @Override
+    public List<User> listContacts(Long userId) {
+        List<User> contactsList = userMapper.listByNotLocked();
+        Iterator<User> it = contactsList.iterator();
+        for(int i=0; i<contactsList.size(); i++){
+            //System.out.println(i);
+            User user = it.next();
+            if(userId == user.getUserId()){
+                it.remove();
+                i--;
+            }
+        }
+        return contactsList;
     }
 }

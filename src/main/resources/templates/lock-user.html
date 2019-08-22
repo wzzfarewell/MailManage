@@ -13,6 +13,7 @@
 <body>
 
 <!-- 导航 -->
+<div class="ui fixed menu">
 <nav th:replace="_framents :: menu(7)" class="ui  attached segment my-padded-tb-mini my-shadow-small">
     <div class="ui container">
         <div class="ui  secondary stackable menu">
@@ -45,6 +46,14 @@
         <i class="sidebar icon"></i>
     </a>
 </nav>
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
 <div class="my-container my-padded-tb-large">
     <div class="ui container">
@@ -144,6 +153,7 @@
     $('.menu.toggle').click(function () {
         $('.m-item ').toggleClass('my-mobile-hidden');
     });
+    $(".ui.dropdown").dropdown();
     //消息提示关闭初始化
     $('.message .close').on('click', function () {
         $(this)

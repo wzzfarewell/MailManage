@@ -14,7 +14,8 @@
 <body>
 
     <!-- 导航 -->
-    <nav th:replace="_framents :: menu(1)" class="ui  attached segment my-padded-tb-mini my-shadow-small">
+    <div class="ui fixed menu">
+    <nav th:replace="_framents :: menu(2)" class="ui  attached segment my-padded-tb-mini my-shadow-small">
         <div class="ui container">
             <div class="ui  secondary stackable menu">
                 <h2 class="ui teal header item">Mail</h2>
@@ -28,6 +29,15 @@
                 <a href="#" shiro:hasPermission="lockUser" th:href="@{/lockUser}"
                     class=" m-item item my-mobile-hidden"><i class="lock icon"></i>锁定非法用户</a>
 
+            <div class="right m-item item my-mobile-hidden menu">
+                <div class="ui dropdown item">
+                    <div class="text">
+                        <img class="ui avatar image" src="https://picsum.photos/id/1000/100/100">
+                        <span th:text="${session.user.name}">farewell</span>
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a href="/logout" class="item"><i class="sign-out icon"></i>登出</a>
                 <div class="right m-item item my-mobile-hidden menu">
                     <div class="ui dropdown item">
                         <div class="text">
@@ -46,92 +56,101 @@
             <i class="sidebar icon"></i>
         </a>
     </nav>
-
-    <div class="my-container my-padded-tb-large">
-        <div class="ui container">
-            <div class="ui segments">
-                <div class="ui segment">
-                    <a class="ui active teal small button">
-                        <i class="paper plane icon"></i>发送
-                    </a>
-                    <a class="ui  teal small button">
-                        存草稿
-                    </a>
-                    <a class="ui  teal small button">
-                        取消
-                    </a>
-                </div>
-                <div class="ui segment">
-                    <form th:action="@{/sentMail}" class="ui form">
-                        <div class="inline fields">
-                            <div class="two wide field">
-                                <label for="">收件人：</label>
-                            </div>
-                            <div class="fourteen wide field">
-                                <select name="receiverName">
-                                    <option disabled>--选择收件人--</option>
-                                    <!--<c:forEach items="${appPlatform}" var="item">
-                                        <option <c:if test="${item == appVo.appPlatform}"> selected</c:if>>${item}</option>
-                                    </th:forEach>-->
-                                </select>
-
-                            </div>
-                        </div>
-                        <div class="inline fields">
-                            <div class="two wide field">
-                                <label for="">收件人邮箱：</label>
-                            </div>
-                            <div class="fourteen wide field">
-                                <div class="ui disabled input">
-                                    <input type="text" name="receiverMail">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label>正文</label>
-                            <textarea name="body" id="" cols="30" rows="10"></textarea>
-                        </div>
-                        <div class="field">
-                            <a class="ui  teal small button" onclick="javascript:$('input[name=\'file\']').click();">
-                                添加附件
-                            </a>
-                            <input name="fileName" readonly />
-                            <input type="file" name="file" style="display: none;" onchange="javascript:$('input[name=\'fileName\']').val(this.files[0].name);" />
-                        </div>
-                    </form>
-                    <div class="ui  section divider"></div>
-                    <i class="user icon"></i> 发件人：<span style="color: blue;" th:text="${user.name}&lt;${user.mailAddress}&gt;">farewell&lt;farewell@mail.com&gt;</span>
-                </div>
-                <div class="ui  segment">
-                    <button class="ui active teal small submit button">
-                        <i class="paper plane icon"></i>发送
-                    </button>
-                    <button class="ui  teal small reset button">
-                        取消
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
 
-  
-    <!-- 底部 -->
-    <footer class="ui segment my-padded-tb-large">
-        <div class="ui center aligned container">
-            <div class="ui  section divider"></div>
-            <p class="my-opacity-mini">Copyright © 2019 Designed by farewell</p>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+<div class="my-container my-padded-tb-large">
+    <div class="ui container">
+        <form th:action="@{/sentMail}" class="ui form">
+            <input hidden name="sender" th:value="${session.user.name}"/>
+        <div class="ui segments">
+            <div class="ui segment">
+                <button type="submit" class="ui active teal small button">
+                    <i class="paper plane icon"></i>发送
+                </button>
+                <a class="ui  teal small button">
+                    存草稿
+                </a>
+                <button type="reset" class="ui  teal small button">
+                    取消
+                </button>
+            </div>
+            <div class="ui segment">
+                    <div class="inline fields">
+                        <div class="two wide field">
+                            <label for="">收件人：</label>
+                        </div>
+                        <div class="fourteen wide field">
+                            <select name="receiver">
+                                <option disabled selected>--选择收件人--</option>
+                                <option th:each="contacts : ${contactsList}" th:text="${contacts.name}"></option>
+                            </select>
+
+                        </div>
+                    </div>
+                   <div class="inline fields">
+                        <div class="two wide field">
+                            <label for="">主题：</label>
+                        </div>
+                        <div class="fourteen wide field">
+                            <div class="ui input">
+                                <input type="text" name="title">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>正文</label>
+                        <textarea name="body" id="" cols="30" rows="10"></textarea>
+                    </div>
+                    <div class="field">
+                        <a class="ui  teal small button" onclick="javascript:$('input[name=\'file\']').click();">
+                            添加附件
+                        </a>
+                        <input name="fileName" readonly />
+                        <input type="file" name="file" style="display: none;" onchange="javascript:$('input[name=\'fileName\']').val(this.files[0].name);" />
+                    </div>
+                <div class="ui  section divider"></div>
+                <i class="user icon"></i> 发件人：<span style="color: blue;" th:text="${session.user.name}+'&lt;'+${session.user.mailAddress}+'&gt;'">farewell&lt;farewell@mail.com&gt;</span>
+                <!---->
+            </div>
+            <div class="ui  segment">
+                <button type="submit" class="ui active teal small button">
+                    <i class="paper plane icon"></i>发送
+                </button>
+                <button type="reset" class="ui teal small button">
+                    取消
+                </button>
+            </div>
         </div>
-    </footer>
+        </form>
+    </div>
+</div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-    <script>
-        $('.menu.toggle').click(function () {
-            $('.m-item ').toggleClass('my-mobile-hidden');
-        });
-        $(".ui.dropdown").dropdown();
-    </script>
+<!-- 底部 -->
+<footer class="ui segment my-padded-tb-large">
+    <div class="ui center aligned container">
+        <div class="ui  section divider"></div>
+        <p class="my-opacity-mini">Copyright © 2019 Designed by farewell</p>
+    </div>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+<script>
+    $('.menu.toggle').click(function () {
+        $('.m-item ').toggleClass('my-mobile-hidden');
+    });
+    $(".ui.dropdown").dropdown();
+    var date = new Date();
+</script>
 </body>
 
 </html>

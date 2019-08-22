@@ -31,4 +31,6 @@ public interface UserService {
     PageInfo<User> searchByCondition(int pageNum, int pageSize, String name, String mailAddress);
 
     ServerResponse updateByUserId(User user);
+
+    List<User> listContacts(Long userId);
 }
