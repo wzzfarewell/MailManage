@@ -118,7 +118,7 @@
                 <a th:href="@{/inbox}" class="ui active teal small button">
                     返回
                 </a>
-                <a th:href="@{/write-mail}" class="ui  teal small button">
+                <a th:href="@{/reply-mail}+ ${mailVo.mailId}" class="ui  teal small button">
                     回复
                 </a>
                 <a th:href="@{/deleteReceiveMail/} + ${mailVo.mailId}" class="ui  teal small button">

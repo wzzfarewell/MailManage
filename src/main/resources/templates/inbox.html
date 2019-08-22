@@ -57,23 +57,25 @@
     <br/>
 
     <div class="my-container my-padded-tb-large">
+        <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
+            <i class="close icon"></i>
+            <div class="header">提示：</div>
+            <p th:text="${message}"></p>
+        </div>
         <div class="ui container">
             <div class="ui segments">
-                <div class="ui segment">
+                <!--<div class="ui segment">
                     <a class="ui active teal small button">
                         <i class="delete icon"></i>删除
                     </a>
                     <a href="#" class="ui  teal small button">
                         刷新
                     </a>
-                </div>
+                </div>-->
                 <div class="ui segment">
                     <table class="ui single line table">
                         <thead>
                             <tr>
-                                <th>
-                                    <input type="checkbox">
-                                </th>
                                 <th>发件人</th>
                                 <th>主题</th>
                                 <th>时间</th>
@@ -82,13 +84,13 @@
                         </thead>
                         <tbody>
                             <tr th:each="mail : ${page.list}">
-                                <td>
-                                    <input type="checkbox">
-                                </td>
                                 <td th:text="${mail.sender}">小白</td>
                                 <td th:text="${mail.title}">这是一封给farewell的邮件</td>
                                 <td th:text="${#dates.format(mail.sendTime, 'yyyy-MM-dd HH:mm:ss')}">2019-8-19</td>
-                                <td><a th:href="@{/checkMail/} + ${mail.mailId}" class="ui  teal small button">查看</a></td>
+                                <td>
+                                    <a th:href="@{/checkMail/} + ${mail.mailId}" class="ui  teal small button">查看</a>
+                                    <a th:href="@{/deleteReceiveMail/} + ${mail.mailId}"><i class="delete icon"></i></a>
+                                </td>
                             </tr>
                         </tbody>
                         <tfoot>
@@ -138,6 +140,32 @@
             $('.m-item ').toggleClass('my-mobile-hidden');
         });
         $(".ui.dropdown").dropdown();
+
+        //消息提示关闭初始化
+        $('.message .close').on('click', function () {
+            $(this)
+                .closest('.message')
+                .transition('fade');
+        });
+
+        function page(obj) {
+            console.log($(obj).data("page"));
+            $("[name='pageNum']").val($(obj).data("page"));
+            loadUserTable();
+        }
+        function loadUserTable() {
+            /*<![CDATA[*/
+            var url= /*[[@{/deleteMail/search}]]*/"deleteMail/search";
+            /*]]>*/
+            $("#table-container").load(url,
+                {
+                    'title' : $("[name='title']").val(),
+                    'sender' : $("[name='sender']").val(),
+                    'receiver' : $("[name='receiver']").val(),
+                    'pageNum' : $("[name='pageNum']").val()
+                }
+            );
+        }
     </script>
 </body>
 

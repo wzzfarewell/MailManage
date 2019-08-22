@@ -172,8 +172,8 @@
 
   <select id="findSenderByMailId" parameterType="java.lang.Long" resultType="java.lang.String">
     select u.name
-    from t_receiver_mail r left join t_user u on r.user_id = u.user_id
-    where r.mail_id = #{mailId,jdbcType=BIGINT}
+    from t_sender_mail s left join t_user u on s.user_id = u.user_id
+    where s.mail_id = #{mailId,jdbcType=BIGINT}
   </select>
 
   <update id="updateReceiveMailState" parameterType="java.lang.Long">

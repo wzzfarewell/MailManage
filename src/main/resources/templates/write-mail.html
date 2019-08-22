@@ -88,10 +88,9 @@
                         </div>
                         <div class="fourteen wide field">
                             <select name="receiver">
-                                <option disabled selected>--选择收件人--</option>
-                                <option th:each="contacts : ${contactsList}" th:text="${contacts.name}"></option>
+                                <option disabled th:selected="${sender==null}">--选择收件人--</option>
+                                <option th:each="contacts : ${contactsList}" th:text="${contacts.name}" th:selected="${contacts.name==sender}"></option>
                             </select>
-
                         </div>
                     </div>
                    <div class="inline fields">

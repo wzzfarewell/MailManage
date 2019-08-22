@@ -24,4 +24,6 @@ public interface MailService {
     MailVo checkMail(Long mailId);
 
     int deleteReceiveMail(Long mailId);
+
+    String findSenderByMailId(Long mailId);
 }

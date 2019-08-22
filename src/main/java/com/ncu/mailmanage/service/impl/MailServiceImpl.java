@@ -116,4 +116,9 @@ public class MailServiceImpl implements MailService {
         result=mailMapper.updateReceiveMailState(mailId,new Long((long)1));
         return result;
     }
+
+    @Override
+    public String findSenderByMailId(Long mailId) {
+        return mailMapper.findSenderByMailId(mailId);
+    }
 }

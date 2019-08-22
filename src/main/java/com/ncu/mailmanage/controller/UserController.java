@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.expression.Dates;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,9 +44,20 @@ public class UserController {
         return "write-mail";
     }
 
+    @GetMapping("/reply-mail/{mailId}")
+    @RequiresPermissions("sendMail")
+    public String ReplyMail(@PathVariable Long mailId,HttpSession session,Model model){
+        User user=(User) session.getAttribute("user");
+        List<User> contactsList = userService.listContacts(user.getUserId());
+        String sender=mailService.findSenderByMailId(mailId);
+        model.addAttribute("contactsList",contactsList);
+        model.addAttribute("sender",sender);
+        return "write-mail";
+    }
+
     @RequestMapping("/sentMail")
     @RequiresPermissions("sendMail")
-    public String sentMail(MailVo mailVo,@RequestParam("file")MultipartFile file,HttpServletRequest request){
+    public String sentMail(MailVo mailVo,@RequestParam("file")MultipartFile file,RedirectAttributes attributes){
 
         // 文件上传
         // 设置文件名称，不能重复，可以使用uuid
@@ -74,8 +86,13 @@ public class UserController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         sdf.format(date);
         mailVo.setSendTime(date);
-        mailService.sendMail(mailVo);
-        return "send-mail-success";
+        int result=mailService.sendMail(mailVo);
+        if(result > 0){
+            attributes.addFlashAttribute("message", "发送邮件成功！");
+        }else{
+            attributes.addFlashAttribute("message", "发送邮件失败！");
+        }
+        return "redirect:/index";
     }
 
     @GetMapping("/inbox")
@@ -98,8 +115,13 @@ public class UserController {
     }
 
     @RequestMapping("/deleteReceiveMail/{mailId}")
-    public String deleteReceiveMail(@PathVariable Long mailId) {
-        mailService.deleteReceiveMail(mailId);
+    public String deleteReceiveMail(@PathVariable Long mailId,RedirectAttributes attributes) {
+        int result=mailService.deleteReceiveMail(mailId);
+        if(result > 0){
+            attributes.addFlashAttribute("message", "删除邮件成功！");
+        }else{
+            attributes.addFlashAttribute("message", "删除邮件失败！");
+        }
         return "redirect:/inbox";
     }
 }
