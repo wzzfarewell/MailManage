@@ -4,7 +4,11 @@ import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.ncu.mailmanage.global.Constant;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +24,8 @@ import java.util.Map;
  **/
 @Configuration
 public class ShiroConfig {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ShiroConfig.class);
 
     /**
      * 凭证匹配器
@@ -55,6 +61,7 @@ public class ShiroConfig {
     public DefaultWebSecurityManager securityManager(){
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         manager.setRealm(userRealm());
+        manager.setRememberMeManager(cookieRememberMeManager());
         return manager;
     }
 
@@ -84,7 +91,8 @@ public class ShiroConfig {
         map.put("/logout", "logout");
         map.put("/favicon.ico", "anon");
         // 需验证后访问
-        map.put("/**", "authc");
+        map.put("/index", "user");
+        map.put("/**", "user");
 
         filterFactoryBean.setFilterChainDefinitionMap(map);
         return filterFactoryBean;
@@ -102,4 +110,25 @@ public class ShiroConfig {
         return new ShiroDialect();
     }
 
+    /**
+     * cookie对象
+     */
+    @Bean
+    public SimpleCookie rememberMeCookie() {
+        //这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        //<!-- 记住我cookie生效时间30天 ,单位秒;-->
+        simpleCookie.setMaxAge(259200);
+        return simpleCookie;
+    }
+
+    /**
+     * cookie管理对象
+     */
+    @Bean
+    public CookieRememberMeManager cookieRememberMeManager() {
+        CookieRememberMeManager manager = new CookieRememberMeManager();
+        manager.setCookie(rememberMeCookie());
+        return manager;
+    }
 }
