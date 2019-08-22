@@ -159,6 +159,18 @@
       )
   </insert>
 
+  <select id="listMail" resultMap="MailWithUser">
+    select
+    m.mail_id as m_id, m.title as m_title, m.body as m_body, m.send_time as m_send_time ,
+    u1.`name` as 'u_sender', u2.`name` as 'u_receiver'
+    from t_mail m left join t_sender_mail sm on m.mail_id = sm.mail_id
+    left join t_user u1 on sm.user_id = u1.user_id
+    left join t_receiver_mail rm on rm.mail_id = m.mail_id
+    left join t_user u2 on rm.user_id = u2.user_id
+    WHERE u1.name = #{name} and sm.state_id = #{stateId}
+  </select>
+
+
   <select id="listByReceiver" parameterType="java.lang.Long" resultMap="MailWithUser">
     select
     m.mail_id as m_id, m.title as m_title, m.body as m_body, m.send_time as m_send_time ,
@@ -172,8 +184,8 @@
 
   <select id="findSenderByMailId" parameterType="java.lang.Long" resultType="java.lang.String">
     select u.name
-    from t_receiver_mail r left join t_user u on r.user_id = u.user_id
-    where r.mail_id = #{mailId,jdbcType=BIGINT}
+    from t_sender_mail s left join t_user u on s.user_id = u.user_id
+    where s.mail_id = #{mailId,jdbcType=BIGINT}
   </select>
 
   <update id="updateReceiveMailState" parameterType="java.lang.Long">
@@ -181,4 +193,46 @@
     set rm.state_id=#{stateId,jdbcType=SMALLINT}
     where rm.mail_id=#{mailId,jdbcType=BIGINT}
   </update>
+
+  <update id="updateSentMailState" parameterType="java.lang.Long">
+    update t_sender_mail t1
+    set t1.state_id=#{stateId,jdbcType=SMALLINT}
+    where t1.mail_id=#{mailId,jdbcType=BIGINT}
+  </update>
+
+
+  <insert id="insertAttachmentSelective" parameterType="com.ncu.mailmanage.pojo.Attachment" keyProperty="attId" useGeneratedKeys="true">
+    insert into t_attachment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="attId != null" >
+        att_id,
+      </if>
+      <if test="attName != null" >
+        att_name,
+      </if>
+      <if test="downloadUrl != null" >
+        download_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="attId != null" >
+        #{attId,jdbcType=BIGINT},
+      </if>
+      <if test="attName != null" >
+        #{attName,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadUrl != null" >
+        #{downloadUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <insert id="insertAttachmentMail" parameterType="java.lang.Long">
+    insert into t_mail_att (mail_id,att_id
+      )
+    values (#{mailId,jdbcType=BIGINT}, #{attId,jdbcType=BIGINT}
+      )
+  </insert>
+
 </mapper>

@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ncu.mailmanage.dao.MailMapper;
 import com.ncu.mailmanage.dao.UserMapper;
+import com.ncu.mailmanage.pojo.Attachment;
 import com.ncu.mailmanage.pojo.Mail;
+import com.ncu.mailmanage.pojo.User;
 import com.ncu.mailmanage.service.MailService;
 import com.ncu.mailmanage.vo.MailVo;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +23,7 @@ import java.util.List;
  **/
 @Service
 public class MailServiceImpl implements MailService {
+
     @Autowired
     private MailMapper mailMapper;
     @Autowired
@@ -63,7 +66,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public int setMail(MailVo mailVo) {
+    public int sendMail(MailVo mailVo) {
         int result=0;
         Mail mail=new Mail();
         mail.setTitle(mailVo.getTitle());
@@ -72,6 +75,15 @@ public class MailServiceImpl implements MailService {
         result=mailMapper.insertSelective(mail);
 
         Long mailId=mail.getMailId();
+
+        //添加附件
+        Attachment attachment=new Attachment();
+        attachment.setAttName(mailVo.getAttName());
+        attachment.setDownloadUrl(mailVo.getDownloadUrl());
+        result+=mailMapper.insertAttachmentSelective(attachment);
+        Long attId=attachment.getAttId();
+        result+=mailMapper.insertAttachmentMail(mailId,attId);
+
         Long senderId=userMapper.findByUsername(mailVo.getSender()).getUserId();
         result+=mailMapper.insertSendMail(senderId,mailId);
 
@@ -104,5 +116,25 @@ public class MailServiceImpl implements MailService {
         int result=0;
         result=mailMapper.updateReceiveMailState(mailId,new Long((long)1));
         return result;
+    }
+
+    @Override
+    public int deleteSentMail(Long mailId) {
+        int result=0;
+        result=mailMapper.updateSentMailState(mailId,new Long((long)1));
+        return result;
+    }
+
+    @Override
+    public PageInfo<MailVo> listSentMail(String name, int pageNum, int pageSize) {
+
+        PageHelper.startPage(pageNum, pageSize);
+        List<MailVo> mail = mailMapper.listMail(name,0);
+        return new PageInfo<>(mail);
+    }
+
+    @Override
+    public String findSenderByMailId(Long mailId) {
+        return mailMapper.findSenderByMailId(mailId);
     }
 }

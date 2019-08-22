@@ -48,6 +48,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String findIntroductionByUserId(Long userId) {
+        return userMapper.findIntroductionByUserId(userId);
+    }
+
+    @Override
+    public int updatePassword(User user) {
+        return userMapper.updateByPrimaryKey(user);
+    }
+
+    @Override
     public ServerResponse register(User user) {
         User user1;
         user1 = userMapper.findByUsername(user.getName());
@@ -100,6 +110,16 @@ public class UserServiceImpl implements UserService {
             users = userMapper.listByConditionAndNotLocked(null, null);
         }
         return new PageInfo<>(users);
+    }
+
+    @Override
+    public ServerResponse updateByUserId(User user) {
+        user.setPassword(userMapper.findByUsername(user.getName()).getPassword());
+        int resultCount=userMapper.updateByPrimaryKeyWithBLOBs(user);
+        if(resultCount > 0){
+            return ServerResponse.createBySuccessMessage("修改成功");
+        }
+        return ServerResponse.createByErrorMessage("修改失败");
     }
 
     @Override

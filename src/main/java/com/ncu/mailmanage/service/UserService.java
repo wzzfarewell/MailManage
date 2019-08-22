@@ -18,6 +18,10 @@ public interface UserService {
 
     List<String> findPermissionsByUserId(Long userId);
 
+    String findIntroductionByUserId(Long userId);
+
+    int updatePassword(User user);
+
     ServerResponse register(User user);
 
     PageInfo<User> listNotLocked(int pageNum, int pageSize);
@@ -25,6 +29,8 @@ public interface UserService {
     int lockUserById(Long userId);
 
     PageInfo<User> searchByCondition(int pageNum, int pageSize, String name, String mailAddress);
+
+    ServerResponse updateByUserId(User user);
 
     List<User> listContacts(Long userId);
 }

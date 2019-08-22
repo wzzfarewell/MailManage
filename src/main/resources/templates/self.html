@@ -9,6 +9,7 @@
     <title>个人中心</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
     <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../static/css/calendar.css" th:href="@{/css/calendar.css}">
 </head>
 
 <body>
@@ -33,7 +34,7 @@
                     <div class="ui dropdown item">
                         <div class="text">
                             <img class="ui avatar image" src="https://picsum.photos/id/1000/100/100">
-                            <span th:text="${user.name}">farewell</span>
+                            <span th:text="${session.user.name}">farewell</span>
                         </div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
@@ -66,13 +67,37 @@
                     <div class="ui grid">
                         <div class="four wide column">
                             <p><i class="user icon"></i> <span
-                                    style="color: blue;">farewell&lt;farewell@mail.com&gt;</span>
+                                    style="color: blue;" th:text="${session.user.mailAddress}">farewell&lt;farewell@mail.com&gt;</span>
                             </p>
                         </div>
                         <div class="ui eight wide column"></div>
                         <div class="ui four wide column">
-                            <a href="" class="ui primary small button">修改密码</a>
+                            <a href="javascript:void(0);" onclick="updatePwd()" class="ui primary small button">修改密码</a>
                         </div>
+                        <div class="ui modal" id="updatePwd">
+                            <div class="header">修改密码</div>
+                            <div class="content">
+                                <form class="ui form" method="post" th:action="@{/self/updatePwd}" id="updatePwdForm">
+                                    <div class="field">
+                                        <label>原密码</label>
+                                        <input type="password" name="oldpwd" >
+                                    </div>
+
+                                    <div class="field">
+                                        <label>新密码</label>
+                                        <input type="password" name="newpwd1" >
+                                    </div>
+                                    <div class="field">
+                                        <label>确认新密码</label>
+                                        <input type="password" name="newpwd2" >
+                                    </div>
+                                    <button class="ui button" type="submit">确认</button>
+                                    <div class="ui error message"></div>
+                                </form>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
                 <div class="ui segment">
@@ -83,31 +108,48 @@
                             </div>
                         </div>
                         <div class="five wide column">
-                            <div class="ui top attached segment">
-                                <div class="ui header">farewell</div>
-                            </div>
-                            <div class="ui attached segment">
-                                邮箱：<p class="my-text"><span style="color: blue;">&lt;farewell@mail.com&gt;</span></p>
-                            </div>
-                            <div class="ui attached segment">
-                                生日：<p class="my-text">1998-01-01</p>
-                            </div>
-                            <div class="ui attached segment">
-                                简介：<p class="my-text">这个人很懒，什么都没有留下...</p>
-                            </div>
+                            <div class="ui special cards">
+                                <div class="card">
+                                    <div class="blurring dimmable image">
+                                        <div class="ui dimmer">
+                                            <div class="content">
+                                                <div class="center">
+                                                    <div class="ui inverted button" onclick="updateAvatar();">修改头像</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <img id="ava" src="../static/img/kristy.png" th:src="${session.user.getAvatar()}">
+                                    </div>
+                                    <div class="content">
+                                        <a class="header"  th:text="${session.user.name}">Team Fu</a>
+                                        <div class="meta">
+                                            Created in <span class="date" th:text="${session.user.createTime}">Sep 2014</span>
+                                        </div>
+                                        <div class="meta" th:text="${session.user.position}">
+                                            测试工程师
+                                        </div>
 
-                            <div class="ui bottom attached segment">
-                                <a href="#" class="ui circular icon button">
-                                    <i class="github icon"></i>
-                                </a>
-                                <a href="#" class="ui wechat circular icon button">
-                                    <i class="weixin icon"></i>
-                                </a>
-                                <a href="#" class="ui qq circular icon button" data-content="364134875"
-                                    data-position="bottom center">
-                                    <i class="qq icon"></i>
-                                </a>
-                            </div>
+                                        <div class="description" th:text="${session.user.getIntroduction()}"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                                            这个人很懒什么都没留下...
+                                        </font></font></div>
+                                    </div>
+                                    <div class="extra content">
+                                        <a href="#" class="ui circular icon button">
+                                            <i class="github icon"></i>
+                                        </a>
+                                        <a href="#" class="ui wechat circular icon button">
+                                            <i class="weixin icon"></i>
+                                        </a>
+                                        <a href="#" class="ui qq circular icon button" data-content="364134875"
+                                           data-position="bottom center">
+                                            <i class="qq icon"></i>
+                                        </a>
+                                        <a style="float: right;" href="javascript:void(0);" onclick="updateInfo()">
+                                            <i class="edit icon"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                                            修改
+                                        </font></font></a>
+                                    </div>
+                                </div>
                         </div>
                     </div>
 
@@ -115,6 +157,105 @@
             </div>
 
         </div>
+        </div>
+    </div>
+
+    <input type="hidden" th:value="${message}" id="message" />
+
+    <div class="ui modal" id="updateInfo">
+        <i class="close icon"></i>
+        <div class="header"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+            修改个人资料
+        </font></font></div>
+        <div class="image content">
+            <div class="ui grid">
+                <div class="six wide column">
+                    <div class="ui medium image">
+                    <img id="ava1" src="../static/img/kristy.png" th:src="${session.user.getAvatar()}">
+                </div>
+                </div>
+                <div class="eight wide column">
+                    <div class="description" style="width: 200%">
+
+                    <form class="ui large form" id="updateInfoForm">
+                        <div class="ui stacked segment">
+                            <div class="disabled field">
+                                <label for="">用户名</label>
+                                <input type="text" readonly name="name" placeholder="用户名" th:value="${session.user.getName()}">
+                            </div>
+                            <div class="required field">
+                                <label for="">邮件地址（只能是@mail.com为后缀的地址）</label>
+                                <input type="email" name="mailAddress" placeholder="@mail.com" th:value="${session.user.getMailAddress()}">
+                            </div>
+
+                            <div class="field">
+                                <label for="">出生日期</label>
+                                <div class="ui calendar" id="date">
+                                    <div class="ui input left icon">
+                                        <i class="calendar icon"></i>
+                                        <input type="text" name="birthday" placeholder="Date" value="1998-01-01" th:value="${session.user.getBirthday()}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="">职务</label>
+                                <input type="text" name="position" placeholder="Java工程师" th:value="${session.user.getPosition()}">
+                            </div>
+                            <div class=" field">
+                                <label for="">简介</label>
+                                <textarea name="introduction" id="introduction" th:text="${session.user.getIntroduction()}" >这个人很懒，什么都没留下...</textarea>
+                            </div>
+
+                            <div>
+                                <ol class="ui list" id="msg">
+
+                                </ol>
+                            </div>
+
+                        </div>
+
+                        <div class="ui error message"></div>
+                    </form>
+
+                </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui black deny button"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                算了
+            </font></font></div>
+            <div class="ui positive right labeled icon button" onclick="loadData();"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+                提交
+            </font></font><i class="checkmark icon"></i>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="ui modal" id="updateAvatar">
+        <i class="close icon"></i>
+        <div class="header"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+            选择一个头像
+        </font></font></div>
+        <div class="image content">
+            <div class="ui medium image">
+                <img id="ava2" src="../static/img/kristy.png" th:src="${session.user.getAvatar()}">
+            </div>
+            <div class="description">
+                <div class="ui small images" id="avatar">
+                    <img class="ui image" src="../static/img/kristy.png" th:src="@{/img/kristy.png}">
+                    <img class="ui image" src="../static/img/daniel.png" th:src="@{/img/daniel.png}">
+                    <img class="ui image" src="../static/img/elyse.png" th:src="@{/img/elyse.png}"><br/>
+                    <img class="ui image" src="../static/img/matthew.png" th:src="@{/img/matthew.png}">
+                    <img class="ui image" src="../static/img/molly.png" th:src="@{/img/molly.png}">
+                    <img class="ui image" src="../static/img/steve.png" th:src="@{/img/steve.png}">
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <br />
@@ -138,11 +279,201 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script src="../static/js/calendar.js" th:src="@{/js/calendar.js}"></script>
     <script>
+
+        $(document)
+            .ready(function () {
+                // 日历插件初始化设置
+                $('#date').calendar({
+                    type: 'date',
+                    formatter: { // 自定义日期的格式
+                        date: function (date, settings) {
+                            if (!date) return '';
+
+                            var year = date.getFullYear();
+                            var month = date.getMonth() + 1;
+                            var day = date.getDate();
+
+                            month = month < 10 ? '0' + month : month;
+                            day = day < 10 ? '0' + day : day;
+
+                            return year + '-' + month + '-' + day;
+                        }
+                    }
+                });
+                // 表单验证
+                $('#updateInfoForm')
+                    .form({
+                        inline: true,
+                        on: 'blur',
+                        fields: {
+
+                            mailAddress: {
+                                identifier: 'mailAddress',
+                                rules: [
+                                    {
+                                        type: 'empty',
+                                        prompt: '请输入您的邮箱地址'
+                                    },
+                                    {
+                                        type: 'regExp',
+                                        value: /^[a-zA-Z_]\w{0,9}@mail.com$/,
+                                        prompt: '邮箱地址不合法，字母数字下划线1到10位, 不能是数字开头，后缀为@mail.com'
+                                    }
+                                ]
+                            }
+                        }
+                    })
+                ;
+
+            })
+        ;
+
         $('.menu.toggle').click(function () {
             $('.m-item ').toggleClass('my-mobile-hidden');
         });
         $(".ui.dropdown").dropdown();
+        $('.special.cards .image').dimmer({
+            on: 'hover'
+        });
+        $('select.dropdown')
+            .dropdown()
+        ;
+        function updatePwd() {
+            $('#updatePwd')
+                .modal('show')
+            ;
+        }
+
+        function updateAvatar() {
+            $('#updateAvatar')
+                .modal('show')
+            ;
+        }
+
+        $('#updatePwdForm')
+            .form({
+
+                fields: {
+                    oldpwd: {
+                        identifier: 'oldpwd',
+                        rules: [
+                            {
+                                type   : 'empty',
+                                prompt : '原密码不能为空'
+                            }
+                        ]
+                    },
+                    newpwd1: {
+                        identifier: 'newpwd1',
+                        rules: [
+                            {
+                                type   : 'empty',
+                                prompt : '新密码不能为空'
+                            },
+                            {
+                                type   : 'minLength[6]',
+                                prompt : '新密码长度不能少于6位'
+                            },
+                            {
+                                type   : 'different[oldpwd]',
+                                prompt : '新旧密码不能一致'
+                            }
+                        ]
+                    },
+                    newpwd2: {
+                        identifier: 'newpwd2',
+                        rules: [
+                            {
+                                type   : 'match[newpwd1]',
+                                prompt : '两次密码必须一致'
+                            }
+                        ]
+                    },
+                }
+            })
+        ;
+
+        $(function () {
+            var message=$("#message").val();
+           if (message!=""){
+               alert(message);
+           }
+        });
+
+        function updateInfo() {
+            $('#updateInfo')
+                .modal('show')
+            ;
+        }
+
+
+        function loadData() {
+            var formData = {
+                'mailAddress' : $("input[name='mailAddress']").val(),
+                'birthday' : $("input[name='birthday']").val(),
+                'position' : $("input[name='position']").val(),
+                'introduction' : $("#introduction").val()
+            };
+            console.log(formData);
+            $.ajax({
+                type: 'POST',
+                data: formData,
+
+                dataType: 'json',
+                url: 'self/updateInfo',
+                success: function(json) {
+                    console.log(json);
+                    if(json.success === true){
+                        alert("修改成功");
+                    }else{
+                        alert("修改失败");
+                    }
+                },
+                error: function(xmlHttpRequest, textStatus, errorThrown){
+                    console.log("请求对象XMLHttpRequest: "+XMLHttpRequest);
+                    console.log("错误类型textStatus: "+textStatus);
+                    console.log("异常对象errorThrown: "+errorThrown);
+                }
+            });
+        }
+
+        $(function () {
+            $("#avatar img").click(function () {
+                var src = $(this).attr("src");
+                var avatar = { 'avatar' : $(this).attr("src") };
+                $(this).css("border","#28FF28 3px solid");
+
+                $.ajax({
+                    type: 'POST',
+                    data: avatar,
+
+                    dataType: 'json',
+                    url: 'self/updateAvatar',
+                    success: function(json) {
+                        console.log(json);
+                        if(json.success === true){
+                            alert("修改成功");
+                            $('#updateAvatar').modal('hide');
+                            $('#ava').attr("src",src);
+                            $('#ava1').attr("src",src);
+                            $('#ava2').attr("src",src);
+                        }else{
+                            alert("修改失败");
+                        }
+                    },
+                    error: function(xmlHttpRequest, textStatus, errorThrown){
+                        console.log("请求对象XMLHttpRequest: "+XMLHttpRequest);
+                        console.log("错误类型textStatus: "+textStatus);
+                        console.log("异常对象errorThrown: "+errorThrown);
+                    }
+                });
+
+            });
+        });
+
+
     </script>
 </body>
 
