@@ -13,6 +13,10 @@ public interface MailMapper {
 
     int insertSelective(Mail record);
 
+    int insertSendMail(@Param(value = "userId")Long userId,@Param(value = "mailId")Long mailId);
+
+    int insertReceiveMail(@Param(value = "userId")Long userId,@Param(value = "mailId")Long mailId);
+
     Mail selectByPrimaryKey(Long mailId);
 
     int updateByPrimaryKeySelective(Mail record);
@@ -24,4 +28,10 @@ public interface MailMapper {
     List<MailVo> listAll();
 
     List<MailVo> listByCondition(@Param("title") String title, @Param("sender") String sender, @Param("receiver") String receiver);
+
+    List<MailVo> listByReceiver(Long userId);
+
+    String findSenderByMailId(Long mailId);
+
+    int updateReceiveMailState(@Param("mailId")Long mailId,@Param("stateId")Long stateId);
 }

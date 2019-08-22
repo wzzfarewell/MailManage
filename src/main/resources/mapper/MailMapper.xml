@@ -50,7 +50,7 @@
     values (#{mailId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{sendTime,jdbcType=TIMESTAMP}, 
       #{body,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.ncu.mailmanage.pojo.Mail" >
+  <insert id="insertSelective" parameterType="com.ncu.mailmanage.pojo.Mail" keyProperty="mailId" useGeneratedKeys="true">
     insert into t_mail
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="mailId != null" >
@@ -145,4 +145,40 @@
 
   </select>
 
+  <insert id="insertSendMail" parameterType="java.lang.Long">
+    insert into t_sender_mail ( user_id,mail_id,state_id
+      )
+    values (#{userId,jdbcType=BIGINT}, #{mailId,jdbcType=BIGINT}, 0
+      )
+  </insert>
+
+  <insert id="insertReceiveMail" parameterType="java.lang.Long">
+    insert into t_receiver_mail ( user_id,mail_id,read_flag,state_id
+      )
+    values (#{userId,jdbcType=BIGINT}, #{mailId,jdbcType=BIGINT},0,0
+      )
+  </insert>
+
+  <select id="listByReceiver" parameterType="java.lang.Long" resultMap="MailWithUser">
+    select
+    m.mail_id as m_id, m.title as m_title, m.body as m_body, m.send_time as m_send_time ,
+    u1.`name` as 'u_sender', u2.`name` as 'u_receiver'
+    from t_mail m left join t_sender_mail sm on m.mail_id = sm.mail_id
+    left join t_user u1 on sm.user_id = u1.user_id
+    left join t_receiver_mail rm on rm.mail_id = m.mail_id
+    left join t_user u2 on rm.user_id = u2.user_id
+    WHERE rm.state_id = 0 and rm.user_id = #{userId,jdbcType=BIGINT}
+  </select>
+
+  <select id="findSenderByMailId" parameterType="java.lang.Long" resultType="java.lang.String">
+    select u.name
+    from t_receiver_mail r left join t_user u on r.user_id = u.user_id
+    where r.mail_id = #{mailId,jdbcType=BIGINT}
+  </select>
+
+  <update id="updateReceiveMailState" parameterType="java.lang.Long">
+    update t_receiver_mail rm
+    set rm.state_id=#{stateId,jdbcType=SMALLINT}
+    where rm.mail_id=#{mailId,jdbcType=BIGINT}
+  </update>
 </mapper>
