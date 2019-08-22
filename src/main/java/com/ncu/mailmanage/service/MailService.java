@@ -19,7 +19,7 @@ public interface MailService {
 
     PageInfo<MailVo> listByCondition(int pageNum, int pageSize, String title, String sender, String receiver);
 
-    int setMail(MailVo mailVo);
+    int sendMail(MailVo mailVo);
 
     PageInfo<MailVo> listSentMail(String name, int pageNum, int pageSize);
 
@@ -30,4 +30,6 @@ public interface MailService {
     int deleteReceiveMail(Long mailId);
 
     int deleteSentMail(Long mailId);
+
+    String findSenderByMailId(Long mailId);
 }

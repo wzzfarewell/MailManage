@@ -22,7 +22,9 @@ public class MailVo {
 
     private String receiver;
 
-    private Long attrId;
+    private String attName;
+
+    private String downloadUrl;
 
 
     public Long getMailId() {
@@ -73,12 +75,20 @@ public class MailVo {
         this.receiver = receiver;
     }
 
-    public Long getAttrId() {
-        return attrId;
+    public String getAttName() {
+        return attName;
     }
 
-    public void setAttrId(Long attrId) {
-        this.attrId = attrId;
+    public void setAttName(String attName) {
+        this.attName = attName;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 
     @Override

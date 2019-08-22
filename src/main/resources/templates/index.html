@@ -55,6 +55,11 @@
 <br/>
 
 <div class="my-container my-padded-tb-large">
+    <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
+        <i class="close icon"></i>
+        <div class="header">提示：</div>
+        <p th:text="${message}"></p>
+    </div>
     <div class="ui container">
         <img src="https://picsum.photos/id/100/600/400" alt="" class="ui image">
     </div>
@@ -95,6 +100,13 @@
         $('.m-item ').toggleClass('my-mobile-hidden');
     });
     $(".ui.dropdown").dropdown();
+
+    //消息提示关闭初始化
+    $('.message .close').on('click', function () {
+        $(this)
+            .closest('.message')
+            .transition('fade');
+    });
 </script>
 </body>
 

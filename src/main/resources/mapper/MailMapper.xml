@@ -184,8 +184,8 @@
 
   <select id="findSenderByMailId" parameterType="java.lang.Long" resultType="java.lang.String">
     select u.name
-    from t_receiver_mail r left join t_user u on r.user_id = u.user_id
-    where r.mail_id = #{mailId,jdbcType=BIGINT}
+    from t_sender_mail s left join t_user u on s.user_id = u.user_id
+    where s.mail_id = #{mailId,jdbcType=BIGINT}
   </select>
 
   <update id="updateReceiveMailState" parameterType="java.lang.Long">
@@ -199,5 +199,40 @@
     set t1.state_id=#{stateId,jdbcType=SMALLINT}
     where t1.mail_id=#{mailId,jdbcType=BIGINT}
   </update>
+
+
+  <insert id="insertAttachmentSelective" parameterType="com.ncu.mailmanage.pojo.Attachment" keyProperty="attId" useGeneratedKeys="true">
+    insert into t_attachment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="attId != null" >
+        att_id,
+      </if>
+      <if test="attName != null" >
+        att_name,
+      </if>
+      <if test="downloadUrl != null" >
+        download_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="attId != null" >
+        #{attId,jdbcType=BIGINT},
+      </if>
+      <if test="attName != null" >
+        #{attName,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadUrl != null" >
+        #{downloadUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <insert id="insertAttachmentMail" parameterType="java.lang.Long">
+    insert into t_mail_att (mail_id,att_id
+      )
+    values (#{mailId,jdbcType=BIGINT}, #{attId,jdbcType=BIGINT}
+      )
+  </insert>
 
 </mapper>
