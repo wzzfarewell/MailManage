@@ -123,7 +123,7 @@
                                     <div class="content">
                                         <a class="header"  th:text="${session.user.name}">Team Fu</a>
                                         <div class="meta">
-                                            Created in <span class="date" th:text="${session.user.createTime}">Sep 2014</span>
+                                            Created in <span class="date" th:text="${#dates.format(session.user.createTime, 'yyyy-MM-dd HH:mm:ss')}">Sep 2014</span>
                                         </div>
                                         <div class="meta" th:text="${session.user.position}">
                                             测试工程师
