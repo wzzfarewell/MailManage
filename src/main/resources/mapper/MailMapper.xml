@@ -181,4 +181,39 @@
     set rm.state_id=#{stateId,jdbcType=SMALLINT}
     where rm.mail_id=#{mailId,jdbcType=BIGINT}
   </update>
+
+  <insert id="insertAttachmentSelective" parameterType="com.ncu.mailmanage.pojo.Attachment" keyProperty="attId" useGeneratedKeys="true">
+    insert into t_attachment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="attId != null" >
+        att_id,
+      </if>
+      <if test="attName != null" >
+        att_name,
+      </if>
+      <if test="downloadUrl != null" >
+        download_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="attId != null" >
+        #{attId,jdbcType=BIGINT},
+      </if>
+      <if test="attName != null" >
+        #{attName,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadUrl != null" >
+        #{downloadUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <insert id="insertAttachmentMail" parameterType="java.lang.Long">
+    insert into t_mail_att (mail_id,att_id
+      )
+    values (#{mailId,jdbcType=BIGINT}, #{attId,jdbcType=BIGINT}
+      )
+  </insert>
+
 </mapper>

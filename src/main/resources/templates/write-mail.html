@@ -67,7 +67,7 @@
 
 <div class="my-container my-padded-tb-large">
     <div class="ui container">
-        <form th:action="@{/sentMail}" class="ui form">
+        <form th:action="@{/sentMail}" class="ui form" method="post" enctype="multipart/form-data">
             <input hidden name="sender" th:value="${session.user.name}"/>
         <div class="ui segments">
             <div class="ui segment">

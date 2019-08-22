@@ -3,6 +3,7 @@ package com.ncu.mailmanage.controller;
 import com.ncu.mailmanage.pojo.User;
 import com.ncu.mailmanage.service.MailService;
 import com.ncu.mailmanage.service.UserService;
+import com.ncu.mailmanage.utils.UploadUtils;
 import com.ncu.mailmanage.vo.MailVo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -11,13 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.expression.Dates;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class UserController {
@@ -40,12 +45,36 @@ public class UserController {
 
     @RequestMapping("/sentMail")
     @RequiresPermissions("sendMail")
-    public String sentMail(MailVo mailVo) {
+    public String sentMail(MailVo mailVo,@RequestParam("file")MultipartFile file,HttpServletRequest request){
+
+        // 文件上传
+        // 设置文件名称，不能重复，可以使用uuid
+        String fileName = UUID.randomUUID().toString().replaceAll("-", "");
+        // 获取文件名
+        System.out.println(file);
+        String oriName = file.getOriginalFilename();
+        // 获取图片后缀
+        String extName = oriName.substring(oriName.lastIndexOf("."));
+        //构建上传路径
+        // 存放上传图片的文件夹
+        File fileDir = UploadUtils.getImgDirFile();
+        try {
+            // 构建真实的文件路径
+            File newFile = new File(fileDir.getAbsolutePath() + File.separator + fileName + extName);
+            // 上传图片到 -》 “绝对路径”
+            file.transferTo(newFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String filePath="upload/"+ fileName + extName;
+        mailVo.setAttName(oriName);
+        mailVo.setDownloadUrl(filePath);
         Date date =new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         sdf.format(date);
         mailVo.setSendTime(date);
-        mailService.setMail(mailVo);
+        mailService.sendMail(mailVo);
         return "send-mail-success";
     }
 

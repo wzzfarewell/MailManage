@@ -1,11 +1,14 @@
 package com.ncu.mailmanage.dao;
 
+import com.ncu.mailmanage.pojo.Attachment;
 import com.ncu.mailmanage.pojo.Mail;
 import com.ncu.mailmanage.vo.MailVo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface MailMapper {
     int deleteByPrimaryKey(Long mailId);
 
@@ -34,4 +37,8 @@ public interface MailMapper {
     String findSenderByMailId(Long mailId);
 
     int updateReceiveMailState(@Param("mailId")Long mailId,@Param("stateId")Long stateId);
+
+    int insertAttachmentSelective(Attachment attachment);
+
+    int insertAttachmentMail(@Param("mailId")Long mailId,@Param("attId")Long attId);
 }
