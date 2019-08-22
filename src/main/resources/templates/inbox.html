@@ -76,20 +76,25 @@
                     <table class="ui single line table">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>发件人</th>
                                 <th>主题</th>
                                 <th>时间</th>
+                                <th></th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="mail : ${page.list}">
+                                <td></td>
                                 <td th:text="${mail.sender}">小白</td>
                                 <td th:text="${mail.title}">这是一封给farewell的邮件</td>
                                 <td th:text="${#dates.format(mail.sendTime, 'yyyy-MM-dd HH:mm:ss')}">2019-8-19</td>
                                 <td>
                                     <a th:href="@{/checkMail/} + ${mail.mailId}" class="ui  teal small button">查看</a>
-                                    <a th:href="@{/deleteReceiveMail/} + ${mail.mailId}"><i class="delete icon"></i></a>
+                                </td>
+                                <td>
+                                    <a th:href="@{/deleteReceiveMail/} + ${mail.mailId}" class="ui  teal small button">删除</a>
                                 </td>
                             </tr>
                         </tbody>
