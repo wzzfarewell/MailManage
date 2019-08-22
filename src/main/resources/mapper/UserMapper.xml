@@ -47,7 +47,7 @@
     delete from t_user
     where user_id = #{userId,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.ncu.mailmanage.pojo.User"  >
+  <insert id="insert" parameterType="com.ncu.mailmanage.pojo.User" useGeneratedKeys="true" keyProperty="userId" >
     insert into t_user (user_id, birthday, create_time, 
       gender, mail_address, name, 
       position, update_time, avatar, 
@@ -239,4 +239,9 @@
       and locked = false
     </where>
   </select>
+
+  <insert id="insertUserRole">
+    insert into t_user_role (user_id, role_id) values (#{userId}, #{roleId});
+  </insert>
+
 </mapper>

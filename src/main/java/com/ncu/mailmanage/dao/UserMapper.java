@@ -30,4 +30,6 @@ public interface UserMapper {
 
     List<User> listByConditionAndNotLocked(@Param("name") String name, @Param("mailAddress") String mailAddress);
 
+    int insertUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
+
 }
