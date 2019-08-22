@@ -64,9 +64,6 @@
                     <table class="ui single line table">
                         <thead>
                             <tr>
-                                <th>
-                                    <input type="checkbox">
-                                </th>
                                 <th>收件人</th>
                                 <th>主题</th>
                                 <th>时间</th>
@@ -76,9 +73,6 @@
                         </thead>
                         <tbody>
                             <tr th:each="obj : ${sentMailPage.list}">
-                                <td>
-                                    <input type="checkbox" name="check" th:value="${obj.getMailId()}">
-                                </td>
                                 <td th:text="${obj.getReceiver()}">小白</td>
                                 <td th:text="${obj.getTitle()}">这是一封给farewell的邮件</td>
                                 <td th:text="${#dates.format(obj.getSendTime(), 'yyyy-MM-dd HH:mm:ss')}">2019-8-19</td>
@@ -90,7 +84,7 @@
                         <tr>
                             <th colspan="9">
                                 <span th:if="${!sentMailPage.isFirstPage}">
-                                    <a th:href="@{/sent(pageNum=${sentMailPage.pageNum + 1})}" class="">上一页</a>
+                                    <a th:href="@{/sent(pageNum=${sentMailPage.pageNum - 1})}" class="">上一页</a>
                                 </span>
                                 <span th:if="${!sentMailPage.isLastPage}">
                                     <a th:href="@{/sent(pageNum=${sentMailPage.pageNum + 1})}"  class="">下一页</a>
