@@ -156,12 +156,12 @@
         function page(obj) {
             console.log($(obj).data("page"));
             $("[name='pageNum']").val($(obj).data("page"));
-            loadUserTable();
+            //loadUserTable();
         }
-        function loadUserTable() {
-            /*<![CDATA[*/
-            var url= /*[[@{/deleteMail/search}]]*/"deleteMail/search";
-            /*]]>*/
+        /*function loadUserTable() {
+            /!*<![CDATA[*!/
+            var url= /!*[[@{/deleteMail/search}]]*!/"deleteMail/search";
+            /!*]]>*!/
             $("#table-container").load(url,
                 {
                     'title' : $("[name='title']").val(),
@@ -170,7 +170,7 @@
                     'pageNum' : $("[name='pageNum']").val()
                 }
             );
-        }
+        }*/
     </script>
 </body>
 
